@@ -6,8 +6,8 @@ import { useUserStore } from "@/stores";
 import router from "@/router";
 export default {
     components: {
-        Field, 
-        Form, 
+        Field,
+        Form,
         ErrorMessage
     },
 
@@ -45,7 +45,7 @@ export default {
         <h1>Registro</h1>
     </div>
 
-    <Form :validation-schema="mySchema" @submit="onSubmit" >
+    <Form :validation-schema="mySchema" @submit="onSubmit">
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
             <Field name="nombre" type="text" class="form-control" id="nombre" aria-describedby="nombreHelp" />
@@ -57,7 +57,7 @@ export default {
             <Field name="apellidos" type="text" class="form-control" id="apellidos" aria-describedby="apellidosHelp" />
             <ErrorMessage name="apellidos" class="error-feedback" />
         </div>
-        
+
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <Field name="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" />
@@ -77,11 +77,11 @@ export default {
         </div>
 
         <button type="submit" class="btn btn-primary">Registrar</button>
-    </Form>    
+    </Form>
 </template>
 
 <style>
-    .error-feedback {
-        color: red;
-    }
+.error-feedback {
+    color: red;
+}
 </style>
