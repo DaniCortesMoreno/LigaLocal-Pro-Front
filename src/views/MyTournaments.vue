@@ -9,6 +9,7 @@ export default {
     components: {
         TournamentItem
     },
+
     data() {
         return {
             torneos: [],
@@ -31,6 +32,7 @@ export default {
 <template>
     <div class="container py-5">
       <h2 class="text-center mb-4">Mis Torneos</h2>
+      <router-link to="/torneos/nuevo" class="btn btn-sm btn-primary mt-3">Crear torneo</router-link>
   
       <div v-if="torneos.length > 0" class="table-responsive">
         <table class="table table-striped table-hover align-middle">
@@ -46,28 +48,8 @@ export default {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="torneo in torneos" :key="torneo.id">
-              <td class="fw-semibold">{{ torneo.nombre }}</td>
-              <td>{{ torneo.tipo }}</td>
-              <td>{{ torneo.fecha_inicio }}</td>
-              <td>{{ torneo.fecha_fin }}</td>
-              <td>
-                <span
-                  class="badge"
-                  :class="{
-                    'bg-success': torneo.estado === 'en curso',
-                    'bg-secondary': torneo.estado === 'pendiente',
-                    'bg-danger': torneo.estado === 'finalizado'
-                  }"
-                >
-                  {{ torneo.estado }}
-                </span>
-              </td>
-              <td>{{ torneo.formato }}</td>
-              <td>
-                <span class="badge bg-info text-dark">{{ torneo.visibilidad }}</span>
-              </td>
-            </tr>
+            <TournamentItem v-for="torneo in torneos" :key="torneo.id" :torneo="torneo" 
+            @click="$router.push('/torneos/' + torneo.id)"></TournamentItem>
           </tbody>
         </table>
       </div>

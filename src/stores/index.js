@@ -111,6 +111,26 @@ export const useUserStore = defineStore("data", {
         console.error(error);
         return [];
       }
+    },
+
+    async addTorneo(torneo) {
+      try {
+        const response = await apiClient.post(`${SERVER}/tournaments`, torneo);
+        return true;
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
+    },
+
+    async getTorneo(id) {
+      try {
+        const response = await apiClient.get(`${SERVER}/tournaments/${id}`);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
     }
   }
 })
