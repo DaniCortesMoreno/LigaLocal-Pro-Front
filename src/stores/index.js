@@ -3,21 +3,24 @@ import { defineStore } from 'pinia'
 import axios from "axios";
 
 const SERVER = "http://localhost:8000/api"
-
+const token = localStorage.getItem("token")
 const apiClient = axios.create({
   baseURL: SERVER,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
   },
+  withCredentials: true,
+
 });
 
 export const useUserStore = defineStore("data", {
   state() {
     return {
       loggedIn: localStorage.getItem("loggedIn") === "true",
-      token: ref(localStorage.getItem("token")),
-      //user: ref(localStorage.getItem("user")),
+      token: localStorage.getItem("token"),
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null,
     }
   },
 
@@ -39,9 +42,9 @@ export const useUserStore = defineStore("data", {
         this.token = token;
         this.loggedIn = true;
         localStorage.setItem("loggedIn", "true");
-        //this.user = response.data.data.user;
+        this.user = response.data.data.user;
 
-        //localStorage.setItem("user", JSON.stringify(response.data.data.user));
+        localStorage.setItem("user", JSON.stringify(response.data.data.user));
 
         // Forzar la actualización de `apiClient` con el nuevo token
         apiClient.defaults.headers.Authorization = `Bearer ${token}`;
@@ -65,9 +68,9 @@ export const useUserStore = defineStore("data", {
         this.token = token;
         this.loggedIn = true;
         localStorage.setItem("loggedIn", "true");
-        //this.user = response.data.data.user;
+        this.user = response.data.data.user;
 
-        //localStorage.setItem("user", JSON.stringify(response.data.data.user));
+        localStorage.setItem("user", JSON.stringify(response.data.data.user));
 
         // Forzar la actualización de `apiClient` con el nuevo token
         apiClient.defaults.headers.Authorization = `Bearer ${token}`;
@@ -87,5 +90,27 @@ export const useUserStore = defineStore("data", {
       localStorage.removeItem("user");
       apiClient.defaults.headers.Authorization = null;
     },
+
+    async getTorneos() {
+      try {
+        const response = await apiClient.get(`${SERVER}/tournaments/public`);
+        return response.data.data;
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+    },
+
+    async getTorneosDelUserActual() {
+      const id = parseInt(JSON.parse(localStorage.getItem("user")).id, 10)
+      console.log(id)
+      try {
+        const response = await apiClient.get(`${SERVER}/tournaments/user/${id}`);
+        return response.data.data;
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+    }
   }
 })

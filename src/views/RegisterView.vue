@@ -41,44 +41,44 @@ export default {
 </script>
 
 <template>
-    <div>
-        <h1>Registro</h1>
+    <div class="container py-5" style="max-width: 600px;">
+      <h2 class="text-center mb-4">Registro de Usuario</h2>
+  
+      <Form :validation-schema="mySchema" @submit="onSubmit">
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre</label>
+          <Field name="nombre" type="text" class="form-control" id="nombre" />
+          <ErrorMessage name="nombre" class="text-danger small" />
+        </div>
+  
+        <div class="mb-3">
+          <label for="apellidos" class="form-label">Apellidos</label>
+          <Field name="apellidos" type="text" class="form-control" id="apellidos" />
+          <ErrorMessage name="apellidos" class="text-danger small" />
+        </div>
+  
+        <div class="mb-3">
+          <label for="email" class="form-label">Correo electrónico</label>
+          <Field name="email" type="email" class="form-control" id="email" />
+          <ErrorMessage name="email" class="text-danger small" />
+        </div>
+  
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña</label>
+          <Field name="password" type="password" class="form-control" id="password" />
+          <ErrorMessage name="password" class="text-danger small" />
+        </div>
+  
+        <div class="mb-4">
+          <label for="confirm_password" class="form-label">Repetir contraseña</label>
+          <Field name="confirm_password" type="password" class="form-control" id="confirm_password" />
+          <ErrorMessage name="confirm_password" class="text-danger small" />
+        </div>
+  
+        <button type="submit" class="btn btn-primary w-100">Registrarme</button>
+      </Form>
     </div>
-
-    <Form :validation-schema="mySchema" @submit="onSubmit">
-        <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre</label>
-            <Field name="nombre" type="text" class="form-control" id="nombre" aria-describedby="nombreHelp" />
-            <ErrorMessage name="nombre" class="error-feedback" />
-        </div>
-
-        <div class="mb-3">
-            <label for="apellidos" class="form-label">Apellidos</label>
-            <Field name="apellidos" type="text" class="form-control" id="apellidos" aria-describedby="apellidosHelp" />
-            <ErrorMessage name="apellidos" class="error-feedback" />
-        </div>
-
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <Field name="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" />
-            <ErrorMessage name="email" class="error-feedback" />
-        </div>
-
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <Field name="password" type="password" class="form-control" id="password" />
-            <ErrorMessage name="password" class="error-feedback" />
-        </div>
-
-        <div>
-            <label for="confirm_password" class="form-label">Confirmar Password</label>
-            <Field name="confirm_password" type="password" class="form-control" id="confirm_password" />
-            <ErrorMessage name="confirm_password" class="error-feedback" />
-        </div>
-
-        <button type="submit" class="btn btn-primary">Registrar</button>
-    </Form>
-</template>
+  </template>
 
 <style>
 .error-feedback {
