@@ -21,6 +21,7 @@ export const useUserStore = defineStore("data", {
       loggedIn: localStorage.getItem("loggedIn") === "true",
       token: localStorage.getItem("token"),
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null,
+      messages: []
     }
   },
 
@@ -48,10 +49,11 @@ export const useUserStore = defineStore("data", {
 
         // Forzar la actualización de `apiClient` con el nuevo token
         apiClient.defaults.headers.Authorization = `Bearer ${token}`;
+        this.addMessage("Te has registrad correctamente", 'success')
         return true;
 
       } catch (error) {
-        console.error(error);
+        this.addMessage("Error al registrar el usuario", 'error')
         return false;
       }
     },
@@ -74,9 +76,10 @@ export const useUserStore = defineStore("data", {
 
         // Forzar la actualización de `apiClient` con el nuevo token
         apiClient.defaults.headers.Authorization = `Bearer ${token}`;
+        this.addMessage("Has iniciado sesión correctamente", 'success')
         return true;
       } catch (error) {
-        console.error(error);
+        this.addMessage("Error al iniciar sesión", 'error')
         return false
       }
 
@@ -116,9 +119,10 @@ export const useUserStore = defineStore("data", {
     async addTorneo(torneo) {
       try {
         const response = await apiClient.post(`${SERVER}/tournaments`, torneo);
+        this.addMessage("Torneo creado correctamente", 'success')
         return true;
       } catch (error) {
-        console.error(error);
+        this.addMessage("Error al crear el torneo", 'error')
         return false;
       }
     },
@@ -131,6 +135,44 @@ export const useUserStore = defineStore("data", {
         console.error(error);
         return null;
       }
+    },
+
+    async getUser(id) {
+      try {
+        const response = await apiClient.get(`${SERVER}/users/${id}`);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    },
+
+    async actualizarPerfil(nuevosDatos) {
+      try {
+        const response = await apiClient.put(`${SERVER}/users/${this.user.id}`, nuevosDatos);
+        this.user = response.data.data;
+        localStorage.setItem("user", JSON.stringify(this.user));
+        this.addMessage("Perfil actualizado correctamente", 'success')
+        return true;
+      } catch (error) {
+        this.addMessage("Error al actualizar el perfil", 'error')
+        return false;
+      }
+    },
+
+    addMessage(text, type = 'success') {
+      const id = Date.now()
+      this.messages.push({ id, text, type })
+
+      // Autoeliminar después de 3s
+      setTimeout(() => {
+        this.removeMessage(id)
+      }, 3000)
+    },
+
+    removeMessage(id) {
+      this.messages = this.messages.filter(msg => msg.id !== id)
     }
+    
   }
 })

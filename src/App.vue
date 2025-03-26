@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import Navbar from './components/Navbar.vue';
+import AppMessages from './components/AppMessages.vue';
 </script>
 
 <template>
@@ -9,6 +10,7 @@ import Navbar from './components/Navbar.vue';
   <div>
     <Navbar />
     <RouterView />
+    <AppMessages />
   </div>
 
 </template>
