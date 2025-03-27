@@ -172,7 +172,61 @@ export const useUserStore = defineStore("data", {
 
     removeMessage(id) {
       this.messages = this.messages.filter(msg => msg.id !== id)
-    }
+    },
+
+    async getTeamsXTorneo(id) {
+      try {
+        const response = await apiClient.get(`${SERVER}/tournaments/${id}/teams`);
+        return response.data.data
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+
+    },
+
+    async addEquipo(id, equipo) {
+      try {
+        const response = await apiClient.post(`${SERVER}/tournaments/${id}/teams`, equipo);
+        this.addMessage("Equipo creado correctamente", 'success')
+        return true;
+      } catch (error) {
+        this.addMessage("Error al crear el equipo", 'error')
+        return false;
+      }
+    },
+
+    async getEquipo(id) {
+      try {
+        const response = await apiClient.get(`${SERVER}/teams/${id}`);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+      
+    },
+
+    async getJugadoresPorEquipo(id) {
+      try {
+        const response = await apiClient.get(`${SERVER}/teams/${id}/players`);
+        return response.data.data;
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+    },
+
+    async deleteEquipo(id) {
+      try {
+        const response = await apiClient.delete(`${SERVER}/teams/${id}`);
+        this.addMessage("Equipo eliminado correctamente", 'success')
+        return true;
+      } catch (error) {
+        this.addMessage("Error al eliminar el equipo", 'error')
+        return false;
+      }
+    },
     
   }
 })

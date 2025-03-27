@@ -7,6 +7,7 @@ import TorneosView from '@/views/TorneosView.vue'
 import CreateTournamentForm from '@/views/CreateTournamentForm.vue'
 import TournamentView from '@/views/TournamentView.vue'
 import PerfilView from '@/views/PerfilView.vue'
+import CreateTeamForm from '@/views/CreateTeamForm.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -50,6 +51,12 @@ const router = createRouter({
       path: "/perfil",
       name: "Perfil",
       component: PerfilView
+    },
+    {
+      path: "/torneos/:torneo_id/equipos/crear",
+      name: "Crear Equipo",
+      component: CreateTeamForm,
+      props: true
     },
     {
       path: '/about',

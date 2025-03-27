@@ -1,26 +1,46 @@
 <script>
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
 import { useUserStore } from '../stores/index'
+import TeamList from '@/components/TeamList.vue';
 
 export default {
   name: "TournamentView",
   props: {
     id: String
   },
+
+  components: {
+    TeamList
+  },
+
+  computed: {
+    esGestorDelTorneo() {
+      return this.user && this.user.id === this.torneo.user_id;
+    },
+    ...mapState(useUserStore, ['user']),
+    esGestorDelTorneo() {
+      return this.user && this.user.id === this.torneo.user_id;
+    }
+
+  },
+
+
   data() {
     return {
       torneo: {
 
       },
-      creadorTorneo: "Cargando..."
+      creadorTorneo: "Cargando...",
+      equipos: []
     }
   },
   async mounted() {
     this.torneo = await this.getTorneo(this.id);
-    this.creadorTorneo = await this.getCreadorTorneo()
+    this.creadorTorneo = await this.getCreadorTorneo();
+    this.equipos = await this.getTeamsXTorneo(this.id);
   },
   methods: {
-    ...mapActions(useUserStore, ['getTorneo', 'getUser']),
+    ...mapActions(useUserStore, ['getTorneo', 'getUser', 'getTeamsXTorneo']),
 
     async getCreadorTorneo() {
       const response = await this.getUser(this.torneo.user_id)
@@ -30,6 +50,11 @@ export default {
       } else {
         return "Desconocido"
       }
+    },
+
+    crearEquipo() {
+      // Aquí rediriges al formulario o abres modal, lo que prefieras
+      this.$router.push(`/torneos/${this.id}/equipos/crear`);
     }
 
 
@@ -92,7 +117,7 @@ export default {
             <p class="mt-2">{{ torneo.reglamento }}</p>
           </div>
           <div class="col-12 mt-4">
-            <strong>Creador:</strong>
+            <strong>Gestor del Torneo:</strong>
             <p class="mt-2">{{ creadorTorneo }}</p>
           </div>
         </div>
@@ -104,5 +129,9 @@ export default {
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Cargando torneo...</span>
     </div>
+  </div>
+
+  <div>
+    <TeamList :equipos="equipos" @crearEquipo="crearEquipo" :puedeCrear="esGestorDelTorneo"></TeamList>
   </div>
 </template>
