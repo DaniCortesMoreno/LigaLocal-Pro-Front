@@ -3,6 +3,7 @@ import { mapActions, mapState } from 'pinia';
 import { useUserStore } from '../stores/index'
 import TeamList from '@/components/TeamList.vue';
 import router from "@/router";
+import InviteUser from '@/components/InviteUser.vue';
 
 export default {
   name: "TournamentView",
@@ -11,7 +12,8 @@ export default {
   },
 
   components: {
-    TeamList
+    TeamList,
+    InviteUser
   },
 
   computed: {
@@ -144,4 +146,8 @@ export default {
     <TeamList :equipos="equipos" @crearEquipo="crearEquipo" :puedeCrear="esGestorDelTorneo" @verEquipo="verEquipo">
     </TeamList>
   </div>
+
+<div>
+  <InviteUser v-if="esGestorDelTorneo" :torneoId="torneo.id" class="mt-4 container" />
+</div>
 </template>

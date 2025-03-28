@@ -226,6 +226,19 @@ export const useUserStore = defineStore("data", {
         this.addMessage("Error al eliminar el equipo", 'error')
         return false;
       }
-    },    
+    },
+    
+    async enviarInvitacion(id, email, role) {
+      try {
+        const response = await apiClient.post(`${SERVER}/tournaments/${id}/invite`, { email, role });
+        this.addMessage(response.data.message || "Invitación enviada correctamente", 'success');
+        return { success: true };
+      } catch (error) {
+        const message = error.response?.data?.message || "Error al enviar la invitación";
+        this.addMessage(message, 'error');
+        return { success: false, message };
+      }
+    }
+    
   }
 })
