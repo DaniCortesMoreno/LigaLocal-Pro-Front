@@ -17,12 +17,23 @@ export default {
   },
 
   computed: {
-    esGestorDelTorneo() {
+    /*esGestorDelTorneo() {
       return this.user && this.user.id === this.torneo.user_id;
-    },
+    },*/
     ...mapState(useUserStore, ['user']),
     esGestorDelTorneo() {
-      return this.user && this.user.id === this.torneo.user_id;
+
+      if (!this.user || !this.torneo) return false;
+
+      // Es el creador del torneo
+      const esCreador = this.user.id === this.torneo.user_id;
+
+      // Es un invitado con rol editor
+      const esEditor = this.torneo.invited_users?.some(
+        invitado => invitado.id === this.user.id && invitado.pivot?.role === 'editor'
+      );
+
+      return esCreador || esEditor;
     }
 
   },
@@ -147,7 +158,7 @@ export default {
     </TeamList>
   </div>
 
-<div>
-  <InviteUser v-if="esGestorDelTorneo" :torneoId="torneo.id" class="mt-4 container" />
-</div>
+  <div>
+    <InviteUser v-if="esGestorDelTorneo" :torneoId="torneo.id" class="mt-4 container" />
+  </div>
 </template>
