@@ -36,7 +36,8 @@ export default {
 
         <div class="row g-3">
             <div class="col-md-6 col-lg-4" v-for="equipo in equipos" :key="equipo.id">
-                <div class="card h-100 shadow-sm">
+                <div class="card h-100 shadow-sm" role="button"
+                @click="$emit('verEquipo', equipo.id)">
                     <div class="card-body">
                         <h5 class="card-title">{{ equipo.nombre }}</h5>
                         <p class="card-text">

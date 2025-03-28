@@ -130,9 +130,9 @@ export const useUserStore = defineStore("data", {
     async getTorneo(id) {
       try {
         const response = await apiClient.get(`${SERVER}/tournaments/${id}`);
-        return response.data;
+        return response.data.data;
       } catch (error) {
-        console.error(error);
+        this.addMessage(error.response.data.message, 'error')
         return null;
       }
     },
@@ -179,7 +179,7 @@ export const useUserStore = defineStore("data", {
         const response = await apiClient.get(`${SERVER}/tournaments/${id}/teams`);
         return response.data.data
       } catch (error) {
-        console.error(error);
+        this.addMessage(error.response.data.message, 'error')
         return [];
       }
 
@@ -226,7 +226,6 @@ export const useUserStore = defineStore("data", {
         this.addMessage("Error al eliminar el equipo", 'error')
         return false;
       }
-    },
-    
+    },    
   }
 })

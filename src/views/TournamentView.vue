@@ -2,6 +2,7 @@
 import { mapActions, mapState } from 'pinia';
 import { useUserStore } from '../stores/index'
 import TeamList from '@/components/TeamList.vue';
+import router from "@/router";
 
 export default {
   name: "TournamentView",
@@ -36,25 +37,33 @@ export default {
   },
   async mounted() {
     this.torneo = await this.getTorneo(this.id);
-    this.creadorTorneo = await this.getCreadorTorneo();
+
+    if (this.torneo && this.torneo.user_id) {
+      this.creadorTorneo = await this.getCreadorTorneo();
+    }
+
     this.equipos = await this.getTeamsXTorneo(this.id);
   },
   methods: {
     ...mapActions(useUserStore, ['getTorneo', 'getUser', 'getTeamsXTorneo']),
 
     async getCreadorTorneo() {
-      const response = await this.getUser(this.torneo.user_id)
+      const response = await this.getUser(this.torneo.user_id);
       if (response && response.success) {
-        const user = response.data
-        return `${user.nombre} ${user.apellidos}`
+        const user = response.data;
+        return `${user.nombre} ${user.apellidos}`;
       } else {
-        return "Desconocido"
+        return "Desconocido";
       }
     },
 
     crearEquipo() {
       // Aquí rediriges al formulario o abres modal, lo que prefieras
       this.$router.push(`/torneos/${this.id}/equipos/crear`);
+    },
+
+    verEquipo(idEquipo) {
+      this.$router.push(`/equipos/${idEquipo}`);
     }
 
 
@@ -132,6 +141,7 @@ export default {
   </div>
 
   <div>
-    <TeamList :equipos="equipos" @crearEquipo="crearEquipo" :puedeCrear="esGestorDelTorneo"></TeamList>
+    <TeamList :equipos="equipos" @crearEquipo="crearEquipo" :puedeCrear="esGestorDelTorneo" @verEquipo="verEquipo">
+    </TeamList>
   </div>
 </template>
