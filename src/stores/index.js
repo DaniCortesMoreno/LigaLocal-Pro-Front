@@ -238,6 +238,16 @@ export const useUserStore = defineStore("data", {
         this.addMessage(message, 'error');
         return { success: false, message };
       }
+    },
+
+    async getJugador(id) {
+      try {
+        const response = await apiClient.get(`${SERVER}/players/${id}`);
+        return response.data.data;
+      } catch (error) {
+        this.addMessage(error.response.data.message, 'error')
+        return null;
+      }
     }
     
   }

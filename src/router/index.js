@@ -9,6 +9,7 @@ import TournamentView from '@/views/TournamentView.vue'
 import PerfilView from '@/views/PerfilView.vue'
 import CreateTeamForm from '@/views/CreateTeamForm.vue'
 import TeamView from '@/views/TeamView.vue'
+import PlayerView from '@/views/PlayerView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -63,6 +64,12 @@ const router = createRouter({
       path: "/equipos/:id",
       name: "Equipo",
       component: TeamView,
+      props: true
+    },
+    {
+      path: "/jugadores/:id",
+      name: "Jugador",
+      component: PlayerView,
       props: true
     },
     {
