@@ -10,6 +10,7 @@ import PerfilView from '@/views/PerfilView.vue'
 import CreateTeamForm from '@/views/CreateTeamForm.vue'
 import TeamView from '@/views/TeamView.vue'
 import PlayerView from '@/views/PlayerView.vue'
+import MatchForm from '@/views/MatchForm.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -70,6 +71,18 @@ const router = createRouter({
       path: "/jugadores/:id",
       name: "Jugador",
       component: PlayerView,
+      props: true
+    },
+    {
+      path: "/torneos/:id/partidos/nuevo",
+      name: "NuevoPartido",
+      component: MatchForm,
+      props: true
+    },
+    {
+      path: "/partidos/:id/editar",
+      name: "EditarPartido",
+      component: MatchForm,
       props: true
     },
     {

@@ -45,7 +45,8 @@ export default {
 
       },
       creadorTorneo: "Cargando...",
-      equipos: []
+      equipos: [],
+      partidos: []
     }
   },
   async mounted() {
@@ -56,9 +57,11 @@ export default {
     }
 
     this.equipos = await this.getTeamsXTorneo(this.id);
+
+    this.partidos = await this.getPartidosXTorneo(this.id);
   },
   methods: {
-    ...mapActions(useUserStore, ['getTorneo', 'getUser', 'getTeamsXTorneo']),
+    ...mapActions(useUserStore, ['getTorneo', 'getUser', 'getTeamsXTorneo', 'getPartidosXTorneo', 'deletePartido']),
 
     async getCreadorTorneo() {
       const response = await this.getUser(this.torneo.user_id);
@@ -70,9 +73,18 @@ export default {
       }
     },
 
+    eliminarPartido(idPartido) {
+      this.deletePartido(idPartido);
+      this.partidos = this.partidos.filter(partido => partido.id !== idPartido);
+    },
+
     crearEquipo() {
       // Aquí rediriges al formulario o abres modal, lo que prefieras
       this.$router.push(`/torneos/${this.id}/equipos/crear`);
+    },
+
+    editarPartido(idPartido) {
+      this.$router.push(`/partidos/${idPartido}/editar`);
     },
 
     verEquipo(idEquipo) {
@@ -160,5 +172,50 @@ export default {
 
   <div>
     <InviteUser v-if="esGestorDelTorneo" :torneoId="torneo.id" class="mt-4 container" />
+  </div>
+
+
+  <div class="mt-5">
+    <h3 class="mb-3 text-center">Partidos del Torneo</h3>
+
+    <div v-if="partidos.length === 0" class="alert alert-light text-center">
+      No hay partidos programados todavía.
+    </div>
+
+    <div v-else class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-primary">
+          <tr>
+            <th>Equipo 1</th>
+            <th>Goles</th>
+            <th>Equipo 2</th>
+            <th>Fecha Hora</th>
+            <th v-if="esGestorDelTorneo">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="partido in partidos" :key="partido.id">
+            <td>{{ partido.equipo1?.nombre || 'Equipo 1' }}</td>
+            <td>{{ partido.goles_equipo1 }} - {{ partido.goles_equipo2 }}</td>
+            <td>{{ partido.equipo2?.nombre || 'Equipo 2' }}</td>
+            <td>{{ partido.fecha_partido }}</td>
+            <td>
+              <button v-if="esGestorDelTorneo" class="btn btn-sm btn-outline-primary me-2"
+                @click="editarPartido(partido.id)">
+                Editar
+              </button>
+              <button v-if="esGestorDelTorneo" class="btn btn-sm btn-outline-danger"
+                @click="eliminarPartido(partido.id)">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <router-link v-if="esGestorDelTorneo" class="btn btn-sm btn-success mb-3" :to="`/torneos/${id}/partidos/nuevo`">
+      Crear nuevo partido
+    </router-link>
   </div>
 </template>

@@ -49,7 +49,7 @@ export const useUserStore = defineStore("data", {
 
         // Forzar la actualización de `apiClient` con el nuevo token
         apiClient.defaults.headers.Authorization = `Bearer ${token}`;
-        this.addMessage("Te has registrad correctamente", 'success')
+        this.addMessage("Te has registrado correctamente", 'success')
         return true;
 
       } catch (error) {
@@ -248,7 +248,61 @@ export const useUserStore = defineStore("data", {
         this.addMessage(error.response.data.message, 'error')
         return null;
       }
-    }
+    },
+
+    async getPartidosXTorneo(id) {
+      try {
+        const response = await apiClient.get(`${SERVER}/tournaments/${id}/match_games`);
+        return response.data.data;
+      } catch (error) {
+        this.addMessage(error.response.data.message, 'error')
+        return [];
+      }
+    },
+
+    async createPartido(payload) {
+      try {
+        const response = await apiClient.post(`${SERVER}/match_games`, payload);
+        this.addMessage("Partido creado correctamente", 'success')
+        return true;
+      } catch (error) {
+        this.addMessage(error.response.data.message, 'success')
+        return false;
+      }
+    },
+
+    async getPartido(id) {
+      try {
+        const response = await apiClient.get(`${SERVER}/match_games/${id}`);
+        return response.data.data;
+      } catch (error) {
+        this.addMessage(error.response.data.message, 'error')
+        return null;
+      }
+    },
+
+    async updatePartido(id, payload) {
+      try {
+        const response = await apiClient.put(`${SERVER}/match_games/${id}`, payload);
+        this.addMessage("Partido actualizado correctamente", 'success')
+        return true;
+      } catch (error) {
+        this.addMessage(error.response.data.message, 'error')
+        return false;
+      }
+    },
+
+    async deletePartido(id) {
+      try {
+        const response = await apiClient.delete(`${SERVER}/match_games/${id}`);
+        this.addMessage("Partido eliminado correctamente", 'success')
+        return true;
+      } catch (error) {
+        this.addMessage(error.response.data.message, 'error')
+        return false;
+      }
+    },
+
     
   }
 })
