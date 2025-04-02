@@ -2,17 +2,18 @@
 import { RouterLink, RouterView } from 'vue-router'
 import Navbar from './components/Navbar.vue';
 import AppMessages from './components/AppMessages.vue';
+import Footer from './components/Footer.vue';
+
 </script>
 
 <template>
-  <header>
-  </header>
-  <div>
+  <div class="d-flex flex-column min-vh-100">
     <Navbar />
-    <RouterView />
-    <AppMessages />
+    <main class="flex-fill">
+      <router-view />
+    </main>
+    <Footer />
   </div>
-
 </template>
 
 <style scoped>
