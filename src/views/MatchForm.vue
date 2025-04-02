@@ -28,7 +28,9 @@ export default {
         arbitro: '',
         goles_equipo1: '',
         goles_equipo2: '',
-      }
+      },
+      jugadores: [],
+      estadisticas: []
     }
   },
   computed: {
@@ -46,7 +48,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useUserStore, ['getTeamsXTorneo', 'createPartido', 'getPartido', 'updatePartido']),
+    ...mapActions(useUserStore, ['getTeamsXTorneo', 'createPartido', 'getPartido', 'updatePartido',
+      'getJugadoresPorEquipo', 'registrarEstadisticas', 'getEstadisticasPartido']),
     async cargarDatos() {
       if (this.esEdicion) {
         const partido = await this.getPartido(this.id);
@@ -66,6 +69,22 @@ export default {
           goles_equipo1: partido.goles_equipo1 ?? '',
           goles_equipo2: partido.goles_equipo2 ?? '',
         };
+        const jugadoresEquipo1 = await this.getJugadoresPorEquipo(partido.equipo1_id);
+        const jugadoresEquipo2 = await this.getJugadoresPorEquipo(partido.equipo2_id);
+        this.jugadores = [...jugadoresEquipo1, ...jugadoresEquipo2];
+
+        const statsGuardadas = await this.getEstadisticasPartido(this.id);
+
+        this.estadisticas = this.jugadores.map(jugador => {
+          const previa = statsGuardadas.find(e => e.id === jugador.id);
+          return {
+            player_id: jugador.id,
+            goles: previa?.pivot?.goles ?? 0,
+            asistencias: previa?.pivot?.asistencias ?? 0,
+            amarillas: previa?.pivot?.amarillas ?? 0,
+            rojas: previa?.pivot?.rojas ?? 0
+          };
+        });
       } else {
         this.equipos = await this.getTeamsXTorneo(this.id); // this.id = torneo_id en creación
       }
@@ -82,12 +101,18 @@ export default {
 
       if (this.esEdicion) {
         const ok = await this.updatePartido(this.id, payload);
-        if (ok) this.$router.push(`/torneos/${this.partidoOriginal.torneo_id}`);
+        if (ok) {
+          const statsValidas = this.estadisticas.filter(e => e.player_id !== undefined && e.player_id !== null);
+          console.log('Enviando estadísticas:', JSON.stringify(statsValidas));
+          await this.registrarEstadisticas(this.id, statsValidas);
+          this.$router.push(`/torneos/${this.partidoOriginal.torneo_id}`);
+        }
       } else {
         const ok = await this.createPartido({ ...payload, torneo_id: this.id });
         if (ok) this.$router.push(`/torneos/${this.id}`);
       }
     }
+
   },
   async mounted() {
     await this.cargarDatos();
@@ -100,7 +125,8 @@ export default {
   <div class="container py-5">
     <h3 class="text-center mb-4">{{ esEdicion ? 'Editar Partido' : 'Crear Partido' }}</h3>
 
-    <Form :key="JSON.stringify(initialValues)" :initial-values="initialValues" @submit="onSubmit" :validation-schema="schema">
+    <Form :key="JSON.stringify(initialValues)" :initial-values="initialValues" @submit="onSubmit"
+      :validation-schema="schema">
       <!-- EQUIPOS -->
       <div class="mb-3">
         <label for="equipo1" class="form-label">Equipo 1</label>
@@ -168,6 +194,73 @@ export default {
           <ErrorMessage name="goles_equipo2" class="text-danger small" />
         </div>
       </div>
+
+      <!-- Estadísticas por jugador separadas por equipo -->
+      <div class="mt-4" v-if="esEdicion">
+        <h5>Estadísticas por jugador</h5>
+
+        <!-- Equipo 1 -->
+        <div class="mb-4">
+          <h6 class="text-primary">Equipo: {{equipos.find(e => e.id == initialValues.equipo1_id)?.nombre || 'Equipo 1'
+            }}</h6>
+
+          <div
+            v-for="(estat, index) in estadisticas.filter(e => jugadores.find(j => j.id === e.player_id)?.team_id == initialValues.equipo1_id)"
+            :key="estat.player_id" class="border rounded p-3 mb-3">
+            <strong>{{jugadores.find(j => j.id === estat.player_id)?.nombre || 'Jugador ' + estat.player_id}}</strong>
+            <div class="row mt-2">
+              <div class="col">
+                <label>Goles</label>
+                <input type="number" min="0" class="form-control" v-model.number="estat.goles" />
+              </div>
+              <div class="col">
+                <label>Asistencias</label>
+                <input type="number" min="0" class="form-control" v-model.number="estat.asistencias" />
+              </div>
+              <div class="col">
+                <label>Amarillas</label>
+                <input type="number" min="0" class="form-control" v-model.number="estat.amarillas" />
+              </div>
+              <div class="col">
+                <label>Rojas</label>
+                <input type="number" min="0" class="form-control" v-model.number="estat.rojas" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Equipo 2 -->
+        <div>
+          <h6 class="text-success">Equipo: {{equipos.find(e => e.id == initialValues.equipo2_id)?.nombre || 'Equipo 2'
+            }}</h6>
+
+          <div
+            v-for="(estat, index) in estadisticas.filter(e => jugadores.find(j => j.id === e.player_id)?.team_id == initialValues.equipo2_id)"
+            :key="estat.player_id" class="border rounded p-3 mb-3">
+            <strong>{{jugadores.find(j => j.id === estat.player_id)?.nombre || 'Jugador ' + estat.player_id}}</strong>
+            <div class="row mt-2">
+              <div class="col">
+                <label>Goles</label>
+                <input type="number" min="0" class="form-control" v-model.number="estat.goles" />
+              </div>
+              <div class="col">
+                <label>Asistencias</label>
+                <input type="number" min="0" class="form-control" v-model.number="estat.asistencias" />
+              </div>
+              <div class="col">
+                <label>Amarillas</label>
+                <input type="number" min="0" class="form-control" v-model.number="estat.amarillas" />
+              </div>
+              <div class="col">
+                <label>Rojas</label>
+                <input type="number" min="0" class="form-control" v-model.number="estat.rojas" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
 
       <div class="mt-4">
         <button type="submit" class="btn btn-primary w-100">

@@ -22,22 +22,22 @@ const router = createRouter({
     {
       path: '/registro',
       name: 'Registro',
-      component: RegisterView 
+      component: RegisterView
     },
     {
       path: '/login',
       name: 'Login',
-      component: LoginView 
+      component: LoginView
     },
     {
       path: '/mis-torneos',
       name: 'Mis Torneos',
-      component: MyTournaments 
+      component: MyTournaments
     },
     {
       path: '/torneos',
       name: 'Torneos',
-      component: TorneosView 
+      component: TorneosView
     },
     {
       path: '/torneos/nuevo',

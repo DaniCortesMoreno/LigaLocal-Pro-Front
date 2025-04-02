@@ -35,9 +35,15 @@ export default {
                     <p><strong>Dorsal:</strong> {{ jugador.dorsal || 'No asignado' }}</p>
                     <p><strong>Posición:</strong> {{ jugador.posición || 'No definida' }}</p>
                     <p><strong>Estado:</strong> {{ jugador.estado || 'Activo' }}</p>
-
                     <p><strong>Equipo:</strong> {{ jugador.team?.nombre || 'Sin equipo' }}</p>
                     <p><strong>Torneo:</strong> {{ jugador.team.tournament?.nombre || 'Sin torneo' }}</p>
+
+                    <h2>Estadísticas</h2>
+                    <p><strong>Goles:</strong> {{ jugador.goles || 'Sin Goles' }}</p>
+                    <p><strong>Asistencias:</strong> {{ jugador.asistencias || 'Sin Asistencias' }}</p>
+                    <p><strong>Amarillas:</strong> {{ jugador.amarillas || 'Sin Amarillas' }}</p>
+                    <p><strong>Rojas:</strong> {{ jugador.rojas || 'Sin Rojas' }}</p>
+
                 </div>
 
                 <!-- Aquí podrías mostrar estadísticas si ya están -->

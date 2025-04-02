@@ -204,7 +204,7 @@ export const useUserStore = defineStore("data", {
         console.error(error);
         return null;
       }
-      
+
     },
 
     async updateEquipo(id, equipo) {
@@ -238,7 +238,7 @@ export const useUserStore = defineStore("data", {
         return false;
       }
     },
-    
+
     async enviarInvitacion(id, email, role) {
       try {
         const response = await apiClient.post(`${SERVER}/tournaments/${id}/invite`, { email, role });
@@ -314,6 +314,29 @@ export const useUserStore = defineStore("data", {
       }
     },
 
+    async registrarEstadisticas(matchId, estadisticas) {
+      try {
+        const response = await apiClient.post(`${SERVER}/match_games/${matchId}/stats`, {stats: estadisticas});
+        this.addMessage("Estadísticas guardadas correctamente", "success");
+        return true;
+      } catch (error) {
+        this.addMessage("Error al guardar estadísticas", "error");
+        return false;
+      }
+    },
+
+    async getEstadisticasPartido(matchId) {
+      try {
+        const response = await apiClient.get(`${SERVER}/match_games/${matchId}/stats`);
+        return response.data.data;
+      } catch (error) {
+        this.addMessage("Error al cargar estadísticas del partido", "error");
+        return [];
+      }
+    }
     
+
+
+
   }
 })
