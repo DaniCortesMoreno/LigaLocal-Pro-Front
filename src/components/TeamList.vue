@@ -47,7 +47,7 @@ export default {
                             <strong>Color:</strong> {{ equipo.color_equipacion || 'No definido' }}
                         </p>
                         <!-- Aquí podrías añadir botones para ver, editar o eliminar equipo -->
-                         <button class="btn btn-primary" @click="$router.push(`/equipos/${equipo.id}/editar`)">Editar Equipo</button>
+                         <button v-if="puedeCrear" class="btn btn-primary" @click="$router.push(`/equipos/${equipo.id}/editar`)">Editar Equipo</button>
                     </div>
                 </div>
             </div>
