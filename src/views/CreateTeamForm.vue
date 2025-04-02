@@ -47,28 +47,66 @@ export default {
 
 
 <template>
-
-    <Form :validation-schema="mySchema" @submit="onSubmit">
-        <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre Del Equipo:</label>
-            <Field name="nombre" type="text" class="form-control" id="nombre" />
-            <ErrorMessage name="nombre" class="text-danger small" />
+    <div class="container py-5" style="max-width: 600px">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h2 class="mb-4 fw-bold text-primary text-center">Crear nuevo equipo</h2>
+  
+          <Form :validation-schema="mySchema" @submit="onSubmit">
+            <!-- Nombre del equipo -->
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre del equipo</label>
+              <Field
+                name="nombre"
+                type="text"
+                class="form-control"
+                id="nombre"
+                placeholder="Ej: Atlético Alcoyano"
+              />
+              <ErrorMessage name="nombre" class="text-danger small" />
+            </div>
+  
+            <!-- Color equipación -->
+            <div class="mb-3">
+              <label for="color_equipacion" class="form-label">Color de la equipación</label>
+              <Field
+                name="color_equipacion"
+                as="select"
+                class="form-select"
+                id="color_equipacion"
+              >
+                <option value="" disabled selected>Seleccione un color</option>
+                <option value="rojo">Rojo</option>
+                <option value="azul">Azul</option>
+                <option value="verde">Verde</option>
+                <option value="amarillo">Amarillo</option>
+                <option value="negro">Negro</option>
+                <option value="blanco">Blanco</option>
+                <option value="naranja">Naranja</option>
+              </Field>
+              <ErrorMessage name="color_equipacion" class="text-danger small" />
+            </div>
+  
+            <!-- Entrenador -->
+            <div class="mb-4">
+              <label for="entrenador" class="form-label">Entrenador</label>
+              <Field
+                name="entrenador"
+                type="text"
+                class="form-control"
+                id="entrenador"
+                placeholder="Ej: Juan Martínez"
+              />
+              <ErrorMessage name="entrenador" class="text-danger small" />
+            </div>
+  
+            <!-- Botón -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg">Guardar equipo</button>
+            </div>
+          </Form>
         </div>
-
-        <div class="mb-4">
-            <label for="color_equipacion" class="form-label">Color De La Equipación:</label>
-            <Field name="color_equipacion" class="form-select" id="color_equipacion" type="text">
-            </Field>
-            <ErrorMessage name="color_equipacion" class="text-danger small" />
-        </div>
-
-        <div class="mb-4">
-            <label for="entrenador" class="form-label">Entrenador:</label>
-            <Field name="entrenador" type="text" class="form-control" id="entrenador" />
-            <ErrorMessage name="entrenador" class="text-danger small" />
-        </div>
-
-        <button type="submit" class="btn btn-primary w-100">Guardar Equipo</button>
-    </Form>
-
-</template>
+      </div>
+    </div>
+  </template>
+  

@@ -101,14 +101,15 @@ export default {
 
 <template>
   <div class="container py-5" v-if="torneo && Object.keys(torneo).length > 0">
-    <div class="card shadow-lg">
+    <div class="card border-0 shadow-sm rounded-4 p-4">
       <div class="card-body">
-        <h2 class="card-title text-center mb-4 text-primary">{{ torneo.nombre }}</h2>
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <strong>Tipo:</strong> {{ torneo.tipo }}
+        <h2 class="text-center text-primary fw-bold mb-4">{{ torneo.nombre }}</h2>
+
+        <div class="row gy-3">
+          <div class="col-md-6">
+            <strong>Tipo:</strong> <span class="text-muted">{{ torneo.tipo }}</span>
           </div>
-          <div class="col-md-6 mb-3">
+          <div class="col-md-6">
             <strong>Estado:</strong>
             <span class="badge" :class="{
               'bg-success': torneo.estado === 'en curso',
@@ -118,25 +119,22 @@ export default {
               {{ torneo.estado }}
             </span>
           </div>
-
-          <div class="col-md-6 mb-3">
-            <strong>Fecha de Inicio:</strong> {{ torneo.fecha_inicio }}
+          <div class="col-md-6">
+            <strong>Inicio:</strong> <span class="text-muted">{{ torneo.fecha_inicio }}</span>
           </div>
-          <div class="col-md-6 mb-3">
-            <strong>Fecha de Fin:</strong> {{ torneo.fecha_fin }}
+          <div class="col-md-6">
+            <strong>Fin:</strong> <span class="text-muted">{{ torneo.fecha_fin }}</span>
           </div>
-
-          <div class="col-md-6 mb-3">
-            <strong>Equipos Permitidos:</strong> {{ torneo.cantidad_equipos }}
+          <div class="col-md-6">
+            <strong>Equipos permitidos:</strong> <span class="text-muted">{{ torneo.cantidad_equipos }}</span>
           </div>
-          <div class="col-md-6 mb-3">
-            <strong>Jugadores por Equipo:</strong> {{ torneo.cantidad_jugadores }}
+          <div class="col-md-6">
+            <strong>Jugadores por equipo:</strong> <span class="text-muted">{{ torneo.cantidad_jugadores }}</span>
           </div>
-
-          <div class="col-md-6 mb-3">
-            <strong>Formato:</strong> {{ torneo.formato }}
+          <div class="col-md-6">
+            <strong>Formato:</strong> <span class="text-muted">{{ torneo.formato }}</span>
           </div>
-          <div class="col-md-6 mb-3">
+          <div class="col-md-6">
             <strong>Visibilidad:</strong>
             <span class="badge" :class="{
               'bg-info text-dark': torneo.visibilidad === 'público',
@@ -145,51 +143,51 @@ export default {
               {{ torneo.visibilidad }}
             </span>
           </div>
-
-          <div class="col-12 mt-4">
+          <div class="col-12">
             <strong>Reglamento:</strong>
-            <p class="mt-2">{{ torneo.reglamento }}</p>
+            <p class="text-muted">{{ torneo.reglamento }}</p>
           </div>
-          <div class="col-12 mt-4">
-            <strong>Gestor del Torneo:</strong>
-            <p class="mt-2">{{ creadorTorneo }}</p>
+          <div class="col-12">
+            <strong>Gestor del torneo:</strong>
+            <p class="text-muted">{{ creadorTorneo }}</p>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="container py-5 text-center" v-else>
+  <div class="container text-center py-5" v-else>
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Cargando torneo...</span>
     </div>
   </div>
 
-  <div>
-    <TeamList :equipos="equipos" @crearEquipo="crearEquipo" :puedeCrear="esGestorDelTorneo" @verEquipo="verEquipo">
-    </TeamList>
-  </div>
-
-  <div>
-    <InviteUser v-if="esGestorDelTorneo" :torneoId="torneo.id" class="mt-4 container" />
-  </div>
-
-
+  <!-- Equipos -->
   <div class="mt-5">
-    <h3 class="mb-3 text-center">Partidos del Torneo</h3>
+    <TeamList :equipos="equipos" @crearEquipo="crearEquipo" :puedeCrear="esGestorDelTorneo" @verEquipo="verEquipo" />
+  </div>
+
+  <!-- Invitación -->
+  <div v-if="esGestorDelTorneo" class="mt-4 container">
+    <InviteUser :torneoId="torneo.id" />
+  </div>
+
+  <!-- Partidos -->
+  <div class="container mt-5">
+    <h3 class="text-center fw-bold mb-4">Partidos del Torneo</h3>
 
     <div v-if="partidos.length === 0" class="alert alert-light text-center">
       No hay partidos programados todavía.
     </div>
 
     <div v-else class="table-responsive">
-      <table class="table table-striped table-hover align-middle">
+      <table class="table table-hover align-middle shadow-sm rounded overflow-hidden">
         <thead class="table-primary">
           <tr>
             <th>Equipo 1</th>
             <th>Goles</th>
             <th>Equipo 2</th>
-            <th>Fecha Hora</th>
+            <th>Fecha / Hora</th>
             <th v-if="esGestorDelTorneo">Acciones</th>
           </tr>
         </thead>
@@ -199,23 +197,32 @@ export default {
             <td>{{ partido.goles_equipo1 }} - {{ partido.goles_equipo2 }}</td>
             <td>{{ partido.equipo2?.nombre || 'Equipo 2' }}</td>
             <td>{{ partido.fecha_partido }}</td>
-            <td>
-              <button v-if="esGestorDelTorneo" class="btn btn-sm btn-outline-primary me-2"
-                @click="editarPartido(partido.id)">
-                Editar
-              </button>
-              <button v-if="esGestorDelTorneo" class="btn btn-sm btn-outline-danger"
-                @click="eliminarPartido(partido.id)">
-                Eliminar
-              </button>
+            <td v-if="esGestorDelTorneo">
+              <button class="btn btn-sm btn-outline-primary me-2" @click="editarPartido(partido.id)">Editar</button>
+              <button class="btn btn-sm btn-outline-danger" @click="eliminarPartido(partido.id)">Eliminar</button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <router-link v-if="esGestorDelTorneo" class="btn btn-sm btn-success mb-3" :to="`/torneos/${id}/partidos/nuevo`">
-      Crear nuevo partido
-    </router-link>
+    <div class="text-center mt-3" v-if="esGestorDelTorneo">
+      <router-link class="btn btn-success btn-sm" :to="`/torneos/${id}/partidos/nuevo`">
+        Crear nuevo partido
+      </router-link>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.card-title {
+  font-size: 1.8rem;
+}
+.table thead th {
+  vertical-align: middle;
+}
+.table td,
+.table th {
+  padding: 0.9rem 1rem;
+}
+</style>

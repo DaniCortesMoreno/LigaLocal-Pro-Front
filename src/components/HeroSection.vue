@@ -1,14 +1,12 @@
-<!-- Componente para mostrar la parte del Inicio del banner de arriba-->
 <template>
-    <section class="bg-light py-5 text-center">
-      <div class="container">
-        <h1 class="display-4 fw-bold">LigaLocal Pro</h1>
-        <p class="lead">Organiza torneos de fútbol de forma fácil, rápida y profesional.</p>
-        <div class="mt-4">
-          <router-link to="/registro" class="btn btn-primary me-2">¡Empieza ahora!</router-link>
-          <router-link to="/torneos" class="btn btn-outline-secondary">Explorar torneos</router-link>
-        </div>
+  <section class="bg-white text-center py-5 border-bottom">
+    <div class="container py-5">
+      <h1 class="display-3 fw-bold text-dark mb-3">LigaLocal Pro</h1>
+      <p class="lead text-muted mb-4">Organiza torneos de fútbol de forma rápida, sencilla y profesional.</p>
+      <div class="d-flex justify-content-center gap-3">
+        <router-link to="/registro" class="btn btn-primary btn-lg px-4 shadow-sm">¡Empieza ahora!</router-link>
+        <router-link to="/torneos" class="btn btn-outline-dark btn-lg px-4">Explorar torneos</router-link>
       </div>
-    </section>
-  </template>
-  
+    </div>
+  </section>
+</template>

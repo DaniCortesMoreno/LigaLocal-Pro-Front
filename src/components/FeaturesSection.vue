@@ -1,24 +1,30 @@
-<!-- Componente del Inicio donde se muestra todo lo que puedes hacer con LigaLocalPro -->
 <template>
-    <section class="container py-5">
-      <h2 class="text-center mb-4">¿Qué puedes hacer con LigaLocal Pro?</h2>
-      <div class="row text-center">
-        <div class="col-md-4 mb-4">
-          <i class="bi bi-trophy fs-1 text-primary"></i>
-          <h5 class="mt-2">Crear torneos</h5>
-          <p>Crea torneos personalizados de fútbol 7, sala o 11.</p>
+  <section class="bg-light py-5">
+    <div class="container">
+      <h2 class="text-center fw-semibold mb-5">¿Qué puedes hacer con LigaLocal Pro?</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-4">
+            <i class="bi bi-trophy display-5 text-primary mb-3"></i>
+            <h5 class="fw-bold mb-2">Crear torneos</h5>
+            <p class="text-muted">Crea torneos personalizados de fútbol 7, sala o 11 en segundos.</p>
+          </div>
         </div>
-        <div class="col-md-4 mb-4">
-          <i class="bi bi-people fs-1 text-success"></i>
-          <h5 class="mt-2">Gestionar equipos</h5>
-          <p>Registra jugadores, escudos, equipaciones y más.</p>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-4">
+            <i class="bi bi-people display-5 text-success mb-3"></i>
+            <h5 class="fw-bold mb-2">Gestionar equipos</h5>
+            <p class="text-muted">Registra equipos, jugadores, escudos y plantillas con facilidad.</p>
+          </div>
         </div>
-        <div class="col-md-4 mb-4">
-          <i class="bi bi-bar-chart-line fs-1 text-warning"></i>
-          <h5 class="mt-2">Controlar estadísticas</h5>
-          <p>Sigue goles, tarjetas y rendimiento en tiempo real.</p>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm text-center p-4">
+            <i class="bi bi-bar-chart-line display-5 text-warning mb-3"></i>
+            <h5 class="fw-bold mb-2">Controlar estadísticas</h5>
+            <p class="text-muted">Lleva un seguimiento en tiempo real de goles, tarjetas y más.</p>
+          </div>
         </div>
       </div>
-    </section>
-  </template>
-  
+    </div>
+  </section>
+</template>
