@@ -18,7 +18,7 @@ export default {
                 apellidos: yup.string().required("Necesitamos tus apellidos!").min(3).max(50),
                 email: yup.string().email().required("Necesitamos tu correo!"),
                 password: yup.string().required("Pon una contraseña de mínimo 6 caracteres").min(6),
-                confirm_password: yup.string().required("Repite la contraseña").oneOf([yup.ref("password")], "Las contraseña deben coincidir"),
+                password_confirmation: yup.string().required("Repite la contraseña").oneOf([yup.ref("password")], "Las contraseña deben coincidir"),
             });
         }
     },
@@ -27,7 +27,7 @@ export default {
         ...mapActions(useUserStore, ["register"]),
 
         onSubmit(values) {
-            if (this.register(values.nombre, values.apellidos, values.password, values.email, values.confirm_password)) {
+            if (this.register(values.nombre, values.apellidos, values.password, values.email, values.password_confirmation)) {
                 router.push("/");
             } else {
                 alert("El usuario no ha podido ser creado");
@@ -70,9 +70,9 @@ export default {
         </div>
   
         <div class="mb-4">
-          <label for="confirm_password" class="form-label">Repetir contraseña</label>
-          <Field name="confirm_password" type="password" class="form-control" id="confirm_password" />
-          <ErrorMessage name="confirm_password" class="text-danger small" />
+          <label for="password_confirmation" class="form-label">Repetir contraseña</label>
+          <Field name="password_confirmation" type="password" class="form-control" id="password_confirmation" />
+          <ErrorMessage name="password_confirmation" class="text-danger small" />
         </div>
   
         <button type="submit" class="btn btn-primary w-100">Registrarme</button>

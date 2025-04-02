@@ -15,25 +15,40 @@ const apiClient = axios.create({
 
 });
 
+if (token) {
+  apiClient.defaults.headers.Authorization = `Bearer ${token}`;
+}
+
+
+// Justo arriba del defineStore:
+let parsedUser = null;
+try {
+  const raw = localStorage.getItem("user");
+  parsedUser = raw ? JSON.parse(raw) : null;
+} catch (error) {
+  console.error("Error al parsear el user del localStorage:", error);
+  localStorage.removeItem("user"); // Por si había algo roto
+}
+
 export const useUserStore = defineStore("data", {
   state() {
     return {
       loggedIn: localStorage.getItem("loggedIn") === "true",
       token: localStorage.getItem("token"),
-      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null,
+      user: parsedUser,
       messages: []
     }
   },
 
   actions: {
-    async register(nombre, apellidos, password, email, confirm_password) {
+    async register(nombre, apellidos, password, email, password_confirmation) {
       try {
         const response = await apiClient.post(`${SERVER}/register`, {
           nombre,
           apellidos,
           password,
           email,
-          confirm_password,
+          password_confirmation,
         });
         console.log(response.data)
         console.log(response.data.data.token)
@@ -88,6 +103,7 @@ export const useUserStore = defineStore("data", {
     logout() {
       this.token = null;
       this.loggedIn = false;
+      this.user = null;
       localStorage.removeItem("token");
       localStorage.removeItem("loggedIn");
       localStorage.removeItem("user");
@@ -106,7 +122,6 @@ export const useUserStore = defineStore("data", {
 
     async getTorneosDelUserActual() {
       const id = parseInt(JSON.parse(localStorage.getItem("user")).id, 10)
-      console.log(id)
       try {
         const response = await apiClient.get(`${SERVER}/tournaments/user/${id}`);
         return response.data.data;
@@ -316,7 +331,7 @@ export const useUserStore = defineStore("data", {
 
     async registrarEstadisticas(matchId, estadisticas) {
       try {
-        const response = await apiClient.post(`${SERVER}/match_games/${matchId}/stats`, {stats: estadisticas});
+        const response = await apiClient.post(`${SERVER}/match_games/${matchId}/stats`, { stats: estadisticas });
         this.addMessage("Estadísticas guardadas correctamente", "success");
         return true;
       } catch (error) {
@@ -334,7 +349,7 @@ export const useUserStore = defineStore("data", {
         return [];
       }
     }
-    
+
 
 
 
