@@ -1,4 +1,6 @@
 <script>
+import router from '@/router';
+
 export default {
     name: "TeamList",
     props: {
@@ -10,7 +12,7 @@ export default {
             type: Boolean,
             default: false
         }
-    }
+    },
 }
 </script>
 
@@ -45,6 +47,7 @@ export default {
                             <strong>Color:</strong> {{ equipo.color_equipacion || 'No definido' }}
                         </p>
                         <!-- Aquí podrías añadir botones para ver, editar o eliminar equipo -->
+                         <button class="btn btn-primary" @click="$router.push(`/equipos/${equipo.id}/editar`)">Editar Equipo</button>
                     </div>
                 </div>
             </div>

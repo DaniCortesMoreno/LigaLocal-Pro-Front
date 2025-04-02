@@ -56,10 +56,10 @@ export default {
   <div class="container py-5" v-if="equipo">
     <div class="card shadow">
       <div class="card-body">
-        <h2 class="card-title mb-4 text-primary text-center">{{ equipo.data.nombre }}</h2>
+        <h2 class="card-title mb-4 text-primary text-center">{{ equipo.nombre }}</h2>
 
-        <p><strong>Entrenador:</strong> {{ equipo.data.entrenador || 'No especificado' }}</p>
-        <p><strong>Color de equipación:</strong> {{ equipo.data.color_equipacion || 'Sin definir' }}</p>
+        <p><strong>Entrenador:</strong> {{ equipo.entrenador || 'No especificado' }}</p>
+        <p><strong>Color de equipación:</strong> {{ equipo.color_equipacion || 'Sin definir' }}</p>
 
         <hr />
 

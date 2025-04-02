@@ -62,6 +62,12 @@ const router = createRouter({
       props: true
     },
     {
+      path: "/equipos/:equipo_id/editar",
+      name: "Editar Equipo",
+      component: CreateTeamForm,
+      props: true
+    },
+    {
       path: "/equipos/:id",
       name: "Equipo",
       component: TeamView,

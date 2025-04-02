@@ -199,12 +199,23 @@ export const useUserStore = defineStore("data", {
     async getEquipo(id) {
       try {
         const response = await apiClient.get(`${SERVER}/teams/${id}`);
-        return response.data;
+        return response.data.data;
       } catch (error) {
         console.error(error);
         return null;
       }
       
+    },
+
+    async updateEquipo(id, equipo) {
+      try {
+        const response = await apiClient.put(`${SERVER}/teams/${id}`, equipo);
+        this.addMessage("Equipo actualizado correctamente", 'success')
+        return true;
+      } catch (error) {
+        this.addMessage("Error al actualizar el equipo", 'error')
+        return false;
+      }
     },
 
     async getJugadoresPorEquipo(id) {
