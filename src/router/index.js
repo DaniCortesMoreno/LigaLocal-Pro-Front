@@ -11,6 +11,7 @@ import CreateTeamForm from '@/views/CreateTeamForm.vue'
 import TeamView from '@/views/TeamView.vue'
 import PlayerView from '@/views/PlayerView.vue'
 import MatchForm from '@/views/MatchForm.vue'
+import MyTournamentsInvited from '@/views/MyTournamentsInvited.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -32,7 +33,14 @@ const router = createRouter({
     {
       path: '/mis-torneos',
       name: 'Mis Torneos',
-      component: MyTournaments
+      component: MyTournaments,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('token')) {
+          next();
+        } else {
+          next('/');
+        }
+      }
     },
     {
       path: '/torneos',
@@ -42,7 +50,14 @@ const router = createRouter({
     {
       path: '/torneos/nuevo',
       name: 'Nuevo Torneo',
-      component: CreateTournamentForm
+      component: CreateTournamentForm,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('token')) {
+          next();
+        } else {
+          next('/');
+        }
+      }
     },
     {
       path: '/torneos/:id',
@@ -53,19 +68,40 @@ const router = createRouter({
     {
       path: "/perfil",
       name: "Perfil",
-      component: PerfilView
+      component: PerfilView,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('token')) {
+          next();
+        } else {
+          next('/');
+        }
+      }
     },
     {
       path: "/torneos/:torneo_id/equipos/crear",
       name: "Crear Equipo",
       component: CreateTeamForm,
-      props: true
+      props: true,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('token')) {
+          next();
+        } else {
+          next('/');
+        }
+      }
     },
     {
       path: "/equipos/:equipo_id/editar",
       name: "Editar Equipo",
       component: CreateTeamForm,
-      props: true
+      props: true,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('token')) {
+          next();
+        } else {
+          next('/');
+        }
+      }
     },
     {
       path: "/equipos/:id",
@@ -83,13 +119,40 @@ const router = createRouter({
       path: "/torneos/:id/partidos/nuevo",
       name: "NuevoPartido",
       component: MatchForm,
-      props: true
+      props: true,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('token')) {
+          next();
+        } else {
+          next('/');
+        }
+      }
     },
     {
       path: "/partidos/:id/editar",
       name: "EditarPartido",
       component: MatchForm,
-      props: true
+      props: true,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('token')) {
+          next();
+        } else {
+          next('/');
+        }
+      }
+    },
+    {
+      path: '/mis-torneos-invitado',
+      name: 'MisTorneosInvitado',
+      component: MyTournamentsInvited,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('token')) {
+          next();
+        } else {
+          next('/');
+        }
+      }
+
     },
     {
       path: '/about',

@@ -51,6 +51,9 @@ const logout = () => {
               <router-link class="nav-link fw-medium" to="/mis-torneos">Mis Torneos</router-link>
             </li>
             <li class="nav-item">
+              <router-link to="/mis-torneos-invitado" class="nav-link fw-medium">Mis Torneos Invitado</router-link>
+            </li>
+            <li class="nav-item">
               <router-link class="nav-link fw-medium" to="/perfil">Mi Perfil</router-link>
             </li>
             <li class="nav-item">

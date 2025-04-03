@@ -348,10 +348,16 @@ export const useUserStore = defineStore("data", {
         this.addMessage("Error al cargar estadísticas del partido", "error");
         return [];
       }
-    }
+    },
 
-
-
-
+    async getTorneosInvitado() {
+      try {
+        const response = await apiClient.get(`${SERVER}/tournaments/invited`);
+        return response.data.data;
+      } catch (error) {
+        this.addMessage('Error al cargar los torneos como invitado', 'error');
+        return [];
+      }
+    },
   }
 })
