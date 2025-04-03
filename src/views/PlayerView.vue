@@ -27,30 +27,56 @@ export default {
 
 <template>
     <div class="container py-5" v-if="jugador">
-        <div class="card shadow">
-            <div class="card-body">
-                <h2 class="card-title text-center text-primary">{{ jugador.nombre }} {{ jugador.apellidos }}</h2>
+        <div class="card shadow-lg rounded-4 border-0">
+            <div class="card-body p-5">
+                <h2 class="text-center text-primary fw-bold mb-4">
+                    {{ jugador.nombre }} {{ jugador.apellidos }}
+                </h2>
 
-                <div class="mt-3">
-                    <p><strong>Dorsal:</strong> {{ jugador.dorsal || 'No asignado' }}</p>
-                    <p><strong>Posición:</strong> {{ jugador.posición || 'No definida' }}</p>
-                    <p><strong>Estado:</strong> {{ jugador.estado || 'Activo' }}</p>
-                    <p><strong>Equipo:</strong> {{ jugador.team?.nombre || 'Sin equipo' }}</p>
-                    <p><strong>Torneo:</strong> {{ jugador.team.tournament?.nombre || 'Sin torneo' }}</p>
-
-                    <h2>Estadísticas</h2>
-                    <p><strong>Goles:</strong> {{ jugador.goles || 'Sin Goles' }}</p>
-                    <p><strong>Asistencias:</strong> {{ jugador.asistencias || 'Sin Asistencias' }}</p>
-                    <p><strong>Amarillas:</strong> {{ jugador.amarillas || 'Sin Amarillas' }}</p>
-                    <p><strong>Rojas:</strong> {{ jugador.rojas || 'Sin Rojas' }}</p>
-
+                <div class="row gy-3">
+                    <div class="col-md-6">
+                        <p><i class="bi bi-person-fill"></i> <strong>Dorsal:</strong> {{ jugador.dorsal || 'No asignado' }}</p>
+                        <p><i class="bi bi-shield-fill"></i> <strong>Posición:</strong> {{ jugador.posición || 'No definida' }}</p>
+                        <p><i class="bi bi-check2-circle"></i> <strong>Estado:</strong> {{ jugador.estado || 'Activo' }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><i class="bi bi-people-fill"></i> <strong>Equipo:</strong> {{ jugador.team?.nombre || 'Sin equipo' }}</p>
+                        <p><i class="bi bi-trophy-fill"></i> <strong>Torneo:</strong> {{ jugador.team?.tournament?.nombre || 'Sin torneo' }}</p>
+                    </div>
                 </div>
 
-                <!-- Aquí podrías mostrar estadísticas si ya están -->
-                <!-- <div class="mt-4">
-            <h5>Estadísticas</h5>
-            ...
-          </div> -->
+                <hr class="my-4"/>
+
+                <div class="text-center">
+                    <h4 class="text-dark mb-4">📊 Estadísticas</h4>
+                    <div class="row justify-content-center">
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="bg-light rounded p-3 shadow-sm">
+                                <strong>Goles</strong>
+                                <div class="fs-4 text-success">{{ jugador.goles || 0 }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="bg-light rounded p-3 shadow-sm">
+                                <strong>Asistencias</strong>
+                                <div class="fs-4 text-primary">{{ jugador.asistencias || 0 }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="bg-light rounded p-3 shadow-sm">
+                                <strong>Amarillas</strong>
+                                <div class="fs-4 text-warning">{{ jugador.amarillas || 0 }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="bg-light rounded p-3 shadow-sm">
+                                <strong>Rojas</strong>
+                                <div class="fs-4 text-danger">{{ jugador.rojas || 0 }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

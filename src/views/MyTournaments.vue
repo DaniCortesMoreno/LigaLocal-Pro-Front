@@ -1,14 +1,20 @@
 <template>
   <div class="container py-5">
+    <!-- Cabecera -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="fw-bold text-primary">Mis Torneos</h2>
-      <router-link to="/torneos/nuevo" class="btn btn-primary">+ Crear torneo</router-link>
+      <h2 class="fw-bold text-primary mb-0">
+        <i class="bi bi-person-badge-fill me-2"></i>Mis Torneos
+      </h2>
+      <router-link to="/torneos/nuevo" class="btn btn-primary shadow-sm">
+        <i class="bi bi-plus-circle me-1"></i>Crear torneo
+      </router-link>
     </div>
 
+    <!-- Tabla de torneos -->
     <div v-if="torneos.length > 0" class="table-responsive">
-      <table class="table table-hover align-middle shadow-sm">
-        <thead class="table-light">
-          <tr class="text-muted">
+      <table class="table table-hover align-middle shadow rounded overflow-hidden">
+        <thead class="table-dark text-light">
+          <tr>
             <th>Nombre</th>
             <th>Tipo</th>
             <th>Inicio</th>
@@ -29,9 +35,14 @@
       </table>
     </div>
 
-    <div v-else class="alert alert-light border text-center mt-5">
-      <h5 class="mb-3">Aún no tienes torneos creados.</h5>
-      <router-link to="/torneos/nuevo" class="btn btn-outline-primary">Crear mi primer torneo</router-link>
+    <!-- Sin torneos -->
+    <div v-else class="alert alert-info text-center mt-5">
+      <h5 class="mb-3">
+        <i class="bi bi-emoji-frown me-2"></i>Aún no tienes torneos creados.
+      </h5>
+      <router-link to="/torneos/nuevo" class="btn btn-outline-primary">
+        <i class="bi bi-plus-circle me-1"></i>Crear mi primer torneo
+      </router-link>
     </div>
   </div>
 </template>

@@ -1,32 +1,30 @@
 <template>
   <div class="container py-5">
-    <h2 class="text-center fw-semibold mb-5">Torneos Públicos</h2>
+    <h2 class="text-center display-6 fw-bold mb-5 text-primary">
+      <i class="bi bi-globe-americas me-2"></i>Torneos Públicos
+    </h2>
 
     <div v-if="torneos.length > 0" class="row g-4">
-      <div
-        class="col-md-6 col-lg-4"
-        v-for="torneo in torneos"
-        :key="torneo.id"
-      >
+      <div class="col-md-6 col-lg-4" v-for="torneo in torneos" :key="torneo.id">
         <div
-          class="card h-100 border-0 shadow-sm rounded-4 p-3 torneo-card"
+          class="card h-100 border-0 shadow-sm rounded-4 torneo-card bg-white"
           @click="verTorneo(torneo.id)"
         >
-          <div class="card-body">
-            <h5 class="card-title fw-bold text-primary mb-3">
+          <div class="card-body p-4">
+            <h5 class="card-title fw-semibold text-primary mb-3">
               <i class="bi bi-shield-check me-2"></i>{{ torneo.nombre }}
             </h5>
 
-            <ul class="list-unstyled small text-muted mb-3">
-              <li><strong>Tipo:</strong> {{ torneo.tipo }}</li>
-              <li><strong>Inicio:</strong> {{ torneo.fecha_inicio }}</li>
+            <ul class="list-unstyled text-muted small mb-4">
+              <li><i class="bi bi-flag-fill me-2 text-secondary"></i><strong>Tipo:</strong> {{ torneo.tipo }}</li>
+              <li><i class="bi bi-calendar-event me-2 text-secondary"></i><strong>Inicio:</strong> {{ torneo.fecha_inicio }}</li>
               <li>
-                <strong>Estado:</strong>
+                <i class="bi bi-info-circle-fill me-2 text-secondary"></i><strong>Estado:</strong>
                 <span
-                  class="badge"
+                  class="badge rounded-pill px-3 py-1"
                   :class="{
                     'bg-success': torneo.estado === 'en curso',
-                    'bg-secondary': torneo.estado === 'pendiente',
+                    'bg-warning text-dark': torneo.estado === 'pendiente',
                     'bg-danger': torneo.estado === 'finalizado'
                   }"
                 >
@@ -44,7 +42,7 @@
     </div>
 
     <div v-else class="alert alert-info text-center mt-5">
-      No hay torneos públicos disponibles.
+      <i class="bi bi-exclamation-circle me-2"></i>No hay torneos públicos disponibles.
     </div>
   </div>
 </template>
@@ -89,6 +87,9 @@ export default {
 }
 .torneo-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
+}
+.card-title {
+  font-size: 1.1rem;
 }
 </style>

@@ -125,61 +125,70 @@ export default {
 
 
 <template>
-  <div class="container py-5" v-if="torneo && Object.keys(torneo).length > 0">
-    <div class="card border-0 shadow-sm rounded-4 p-4">
-      <div class="card-body">
-        <h2 class="text-center text-primary fw-bold mb-4">{{ torneo.nombre }}</h2>
+  <section class="container py-5" v-if="torneo && Object.keys(torneo).length > 0">
+    <div class="bg-white shadow-lg rounded-4 p-5 border border-light-subtle">
+      <h2 class="text-center text-primary display-4 fw-bold mb-5">
+        <i class="bi bi-trophy-fill me-2"></i> {{ torneo.nombre }}
+      </h2>
 
-        <div class="row gy-3">
-          <div class="col-md-6">
-            <strong>Tipo:</strong> <span class="text-muted">{{ torneo.tipo }}</span>
-          </div>
-          <div class="col-md-6">
-            <strong>Estado:</strong>
-            <span class="badge" :class="{
-              'bg-success': torneo.estado === 'en curso',
-              'bg-warning text-dark': torneo.estado === 'pendiente',
-              'bg-danger': torneo.estado === 'finalizado'
-            }">
-              {{ torneo.estado }}
-            </span>
-          </div>
-          <div class="col-md-6">
-            <strong>Inicio:</strong> <span class="text-muted">{{ torneo.fecha_inicio }}</span>
-          </div>
-          <div class="col-md-6">
-            <strong>Fin:</strong> <span class="text-muted">{{ torneo.fecha_fin }}</span>
-          </div>
-          <div class="col-md-6">
-            <strong>Equipos permitidos:</strong> <span class="text-muted">{{ torneo.cantidad_equipos }}</span>
-          </div>
-          <div class="col-md-6">
-            <strong>Jugadores por equipo:</strong> <span class="text-muted">{{ torneo.cantidad_jugadores }}</span>
-          </div>
-          <div class="col-md-6">
-            <strong>Formato:</strong> <span class="text-muted">{{ torneo.formato }}</span>
-          </div>
-          <div class="col-md-6">
-            <strong>Visibilidad:</strong>
-            <span class="badge" :class="{
-              'bg-info text-dark': torneo.visibilidad === 'público',
-              'bg-secondary': torneo.visibilidad === 'privado'
-            }">
-              {{ torneo.visibilidad }}
-            </span>
-          </div>
-          <div class="col-12">
-            <strong>Reglamento:</strong>
-            <p class="text-muted">{{ torneo.reglamento }}</p>
-          </div>
-          <div class="col-12">
-            <strong>Gestor del torneo:</strong>
-            <p class="text-muted">{{ creadorTorneo }}</p>
-          </div>
+      <div class="row gy-4">
+        <div class="col-md-6">
+          <i class="bi bi-flag-fill text-primary me-2"></i><strong>Tipo:</strong>
+          <span class="text-muted">{{ torneo.tipo }}</span>
+        </div>
+        <div class="col-md-6">
+          <i class="bi bi-stopwatch-fill text-primary me-2"></i><strong>Estado:</strong>
+          <span class="badge fs-6" :class="{
+            'bg-success': torneo.estado === 'en curso',
+            'bg-warning text-dark': torneo.estado === 'pendiente',
+            'bg-danger': torneo.estado === 'finalizado'
+          }">
+            {{ torneo.estado }}
+          </span>
+        </div>
+        <div class="col-md-6">
+          <i class="bi bi-calendar-event text-primary me-2"></i><strong>Inicio:</strong>
+          <span class="text-muted">{{ torneo.fecha_inicio }}</span>
+        </div>
+        <div class="col-md-6">
+          <i class="bi bi-calendar-check text-primary me-2"></i><strong>Fin:</strong>
+          <span class="text-muted">{{ torneo.fecha_fin }}</span>
+        </div>
+        <!--<div class="col-md-6">
+        <i class="bi bi-people-fill text-primary me-2"></i><strong>Equipos permitidos:</strong>
+        <span class="text-muted">{{ torneo.cantidad_equipos }}</span>
+      </div>-->
+        <!--<div class="col-md-6">
+        <i class="bi bi-person-lines-fill text-primary me-2"></i><strong>Jugadores por equipo:</strong>
+        <span class="text-muted">{{ torneo.cantidad_jugadores }}</span>
+      </div>-->
+        <div class="col-md-6">
+          <i class="bi bi-diagram-3-fill text-primary me-2"></i><strong>Formato:</strong>
+          <span class="text-muted">{{ torneo.formato }}</span>
+        </div>
+        <div class="col-md-6">
+          <i class="bi bi-eye-fill text-primary me-2"></i><strong>Visibilidad:</strong>
+          <span class="badge fs-6 text-dark" :class="{
+            'bg-success': torneo.visibilidad?.toLowerCase() === 'público',
+            'bg-secondary': torneo.visibilidad?.toLowerCase() === 'privado'
+          }">
+            <i class="bi bi-globe me-1"></i> {{ torneo.visibilidad }}
+          </span>
+
+
+        </div>
+        <div class="col-12">
+          <i class="bi bi-journal-text text-primary me-2"></i><strong>Reglamento:</strong>
+          <p class="text-muted border-start border-3 ps-3">{{ torneo.reglamento }}</p>
+        </div>
+        <div class="col-12">
+          <i class="bi bi-person-fill text-primary me-2"></i><strong>Gestor del torneo:</strong>
+          <p class="text-muted">{{ creadorTorneo }}</p>
         </div>
       </div>
     </div>
-  </div>
+  </section>
+
 
   <div class="container text-center py-5" v-else>
     <div class="spinner-border text-primary" role="status">
@@ -188,67 +197,80 @@ export default {
   </div>
 
   <!-- Equipos -->
-  <div class="mt-5">
+  <section class="container mt-5">
     <TeamList :equipos="equipos" @crearEquipo="crearEquipo" :puedeCrear="esGestorDelTorneo" @verEquipo="verEquipo" />
-  </div>
+  </section>
 
-  <!-- Invitación -->
-  <div v-if="esGestorDelTorneo" class="mt-4 container">
-    <InviteUser :torneoId="torneo.id" />
-  </div>
+
 
   <!-- Partidos -->
-  <div class="container mt-5">
-    <h3 class="text-center fw-bold mb-4">Partidos del Torneo</h3>
+  <section class="container mt-5">
+    <div class="card shadow-sm rounded-3">
+      <div class="card-body">
+        <h3 class="text-center fw-bold mb-4 text-primary">Partidos del Torneo</h3>
 
-    <div v-if="partidos.length === 0" class="alert alert-light text-center">
-      No hay partidos programados todavía.
+        <div v-if="partidos.length === 0" class="alert alert-light text-center">
+          No hay partidos programados todavía.
+        </div>
+
+        <div v-else class="table-responsive">
+          <table class="table table-hover align-middle shadow-sm rounded overflow-hidden">
+            <thead class="table-dark">
+              <tr>
+                <th>Equipo 1</th>
+                <th>Goles</th>
+                <th>Equipo 2</th>
+                <th>Fecha / Hora</th>
+                <th v-if="esGestorDelTorneo">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="partido in partidos" :key="partido.id">
+                <td>{{ partido.equipo1?.nombre || 'Equipo 1' }}</td>
+                <td>{{ partido.goles_equipo1 }} - {{ partido.goles_equipo2 }}</td>
+                <td>{{ partido.equipo2?.nombre || 'Equipo 2' }}</td>
+                <td>{{ partido.fecha_partido }}</td>
+                <td v-if="esGestorDelTorneo">
+                  <button class="btn btn-sm btn-outline-primary me-2" @click="editarPartido(partido.id)">Editar</button>
+                  <button class="btn btn-sm btn-outline-danger" @click="eliminarPartido(partido.id)">Eliminar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="text-center mt-3" v-if="esGestorDelTorneo">
+          <router-link class="btn btn-success btn-sm" :to="`/torneos/${id}/partidos/nuevo`">
+            Crear nuevo partido
+          </router-link>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div v-else class="table-responsive">
-      <table class="table table-hover align-middle shadow-sm rounded overflow-hidden">
-        <thead class="table-primary">
-          <tr>
-            <th>Equipo 1</th>
-            <th>Goles</th>
-            <th>Equipo 2</th>
-            <th>Fecha / Hora</th>
-            <th v-if="esGestorDelTorneo">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="partido in partidos" :key="partido.id">
-            <td>{{ partido.equipo1?.nombre || 'Equipo 1' }}</td>
-            <td>{{ partido.goles_equipo1 }} - {{ partido.goles_equipo2 }}</td>
-            <td>{{ partido.equipo2?.nombre || 'Equipo 2' }}</td>
-            <td>{{ partido.fecha_partido }}</td>
-            <td v-if="esGestorDelTorneo">
-              <button class="btn btn-sm btn-outline-primary me-2" @click="editarPartido(partido.id)">Editar</button>
-              <button class="btn btn-sm btn-outline-danger" @click="eliminarPartido(partido.id)">Eliminar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <section v-if="(esGestorDelTorneo || user) && usuarios.length > 0" class="container mt-5">
+    <div class="row g-4">
+      <!-- Lista de usuarios -->
+      <div :class="['card shadow-sm p-4 h-100', esGestorDelTorneo ? 'col-md-6' : 'col-12']">
+        <h5 class="mb-3">Usuarios del Torneo</h5>
+        <ul class="list-group">
+          <li class="list-group-item">{{ creadorTorneo }} (Owner)</li>
+          <li v-for="usuario in usuarios" :key="usuario.id" class="list-group-item">
+            {{ usuario.nombre }} {{ usuario.apellidos }} ({{ usuario.role || 'Sin Definir' }})
+          </li>
+        </ul>
+      </div>
+
+      <!-- Formulario de invitación -->
+      <div class="col-md-6" v-if="esGestorDelTorneo">
+        <div class="card shadow-sm p-4 h-100">
+          <h5 class="mb-3">Invitar usuario</h5>
+          <InviteUser :torneoId="torneo.id" />
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div class="text-center mt-3" v-if="esGestorDelTorneo">
-      <router-link class="btn btn-success btn-sm" :to="`/torneos/${id}/partidos/nuevo`">
-        Crear nuevo partido
-      </router-link>
-    </div>
-
-    <div v-if="(esGestorDelTorneo || this.user) && usuarios.length > 0">
-      <h5>Usuarios Del Torneo</h5>
-      <ul>
-        <li>{{ creadorTorneo }} (Owner)</li>
-        <li v-for="usuario in usuarios" :key="usuario.id">
-          {{ usuario.nombre }} {{ usuario.apellidos }} ({{ usuario.role || 'Sin Definir' }})
-        </li>
-      </ul>
-    </div>
-
-
-  </div>
 </template>
 
 <style scoped>

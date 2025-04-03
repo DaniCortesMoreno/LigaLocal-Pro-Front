@@ -74,32 +74,46 @@ export default {
 
 <template>
   <div class="container py-5" style="max-width: 600px">
-    <div class="card shadow-sm border-0">
+    <div class="card shadow-lg border-0 rounded-4">
       <div class="card-body p-4">
-        <h2 class="mb-4 fw-bold text-primary text-center">Crear nuevo equipo</h2>
+        <h2 class="mb-4 fw-bold text-primary text-center">
+          <i class="bi bi-people-fill me-2"></i>
+          {{ equipo_id ? 'Editar equipo' : 'Crear nuevo equipo' }}
+        </h2>
 
         <Form :validation-schema="mySchema" @submit="onSubmit">
           <!-- Nombre del equipo -->
           <div class="mb-3">
             <label for="nombre" class="form-label">Nombre del equipo</label>
-            <Field v-model="equipo.nombre" name="nombre" type="text" class="form-control" id="nombre"
-              placeholder="Ej: Atlético Alcoyano" />
+            <Field
+              v-model="equipo.nombre"
+              name="nombre"
+              type="text"
+              class="form-control"
+              id="nombre"
+              placeholder="Ej: Atlético Alcoyano"
+            />
             <ErrorMessage name="nombre" class="text-danger small" />
           </div>
 
           <!-- Color equipación -->
           <div class="mb-3">
             <label for="color_equipacion" class="form-label">Color de la equipación</label>
-            <Field v-model="equipo.color_equipacion" name="color_equipacion" as="select" class="form-select"
-              id="color_equipacion">
+            <Field
+              v-model="equipo.color_equipacion"
+              name="color_equipacion"
+              as="select"
+              class="form-select"
+              id="color_equipacion"
+            >
               <option value="" disabled selected>Seleccione un color</option>
-              <option value="Rojo">Rojo</option>
-              <option value="Azul">Azul</option>
-              <option value="Verde">Verde</option>
-              <option value="Amarillo">Amarillo</option>
-              <option value="Negro">Negro</option>
-              <option value="Blanco">Blanco</option>
-              <option value="Naranja">Naranja</option>
+              <option value="Rojo">🔴 Rojo</option>
+              <option value="Azul">🔵 Azul</option>
+              <option value="Verde">🟢 Verde</option>
+              <option value="Amarillo">🟡 Amarillo</option>
+              <option value="Negro">⚫ Negro</option>
+              <option value="Blanco">⚪ Blanco</option>
+              <option value="Naranja">🟠 Naranja</option>
             </Field>
             <ErrorMessage name="color_equipacion" class="text-danger small" />
           </div>
@@ -107,14 +121,23 @@ export default {
           <!-- Entrenador -->
           <div class="mb-4">
             <label for="entrenador" class="form-label">Entrenador</label>
-            <Field v-model="equipo.entrenador" name="entrenador" type="text" class="form-control" id="entrenador"
-              placeholder="Ej: Juan Martínez" />
+            <Field
+              v-model="equipo.entrenador"
+              name="entrenador"
+              type="text"
+              class="form-control"
+              id="entrenador"
+              placeholder="Ej: Juan Martínez"
+            />
             <ErrorMessage name="entrenador" class="text-danger small" />
           </div>
 
           <!-- Botón -->
           <div class="d-grid">
-            <button type="submit" class="btn btn-primary btn-lg">Guardar equipo</button>
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="bi bi-check2-circle me-2"></i>
+              {{ equipo_id ? 'Guardar cambios' : 'Guardar equipo' }}
+            </button>
           </div>
         </Form>
       </div>

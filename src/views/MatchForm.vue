@@ -123,150 +123,132 @@ export default {
 
 <template>
   <div class="container py-5">
-    <h3 class="text-center mb-4">{{ esEdicion ? 'Editar Partido' : 'Crear Partido' }}</h3>
+    <div class="card shadow-sm border-0 rounded-4 p-4">
+      <h3 class="text-center mb-4 text-primary">
+        <i class="bi bi-calendar2-plus me-2"></i>{{ esEdicion ? 'Editar Partido' : 'Crear Partido' }}
+      </h3>
 
-    <Form :key="JSON.stringify(initialValues)" :initial-values="initialValues" @submit="onSubmit"
-      :validation-schema="schema">
-      <!-- EQUIPOS -->
-      <div class="mb-3">
-        <label for="equipo1" class="form-label">Equipo 1</label>
-        <Field name="equipo1_id" as="select" class="form-select">
-          <option disabled value="">Selecciona un equipo</option>
-          <option v-for="equipo in equipos" :key="equipo.id" :value="equipo.id">
-            {{ equipo.nombre }}
-          </option>
-        </Field>
-        <ErrorMessage name="equipo1_id" class="text-danger small" />
-      </div>
+      <Form :key="JSON.stringify(initialValues)" :initial-values="initialValues" @submit="onSubmit"
+        :validation-schema="schema">
 
-      <div class="mb-3">
-        <label for="equipo2" class="form-label">Equipo 2</label>
-        <Field name="equipo2_id" as="select" class="form-select">
-          <option disabled value="">Selecciona un equipo</option>
-          <option v-for="equipo in equipos" :key="equipo.id" :value="equipo.id">
-            {{ equipo.nombre }}
-          </option>
-        </Field>
-        <ErrorMessage name="equipo2_id" class="text-danger small" />
-      </div>
+        <!-- Equipos -->
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="equipo1_id" class="form-label">Equipo 1</label>
+            <Field name="equipo1_id" as="select" class="form-select">
+              <option disabled value="">Selecciona un equipo</option>
+              <option v-for="equipo in equipos" :key="equipo.id" :value="equipo.id">
+                {{ equipo.nombre }}
+              </option>
+            </Field>
+            <ErrorMessage name="equipo1_id" class="text-danger small" />
+          </div>
 
-      <!-- FECHA Y HORA -->
-      <div class="mb-3">
-        <label for="fecha_partido" class="form-label">Fecha</label>
-        <Field name="fecha_partido" type="date" class="form-control" />
-        <ErrorMessage name="fecha_partido" class="text-danger small" />
-      </div>
-
-      <div class="mb-3">
-        <label for="hora" class="form-label">Hora</label>
-        <Field name="hora" type="time" class="form-control" />
-        <ErrorMessage name="hora" class="text-danger small" />
-      </div>
-
-      <!-- ÁRBITRO -->
-      <div class="mb-3">
-        <label for="arbitro" class="form-label">Árbitro</label>
-        <Field name="arbitro" type="text" class="form-control" />
-        <ErrorMessage name="arbitro" class="text-danger small" />
-      </div>
-
-      <!-- ESTADO (SOLO EDICIÓN) -->
-      <div class="mb-3" v-if="esEdicion">
-        <label for="estado_partido" class="form-label">Estado del Partido</label>
-        <Field name="estado_partido" as="select" class="form-select">
-          <option value="pendiente">Pendiente</option>
-          <option value="en_curso">En curso</option>
-          <option value="finalizado">Finalizado</option>
-        </Field>
-        <ErrorMessage name="estado_partido" class="text-danger small" />
-      </div>
-
-      <!-- GOLES (SOLO EDICIÓN) -->
-      <div class="row" v-if="esEdicion">
-        <div class="col-md-6 mb-3">
-          <label for="goles_equipo1" class="form-label">Goles Equipo 1</label>
-          <Field name="goles_equipo1" type="number" min="0" class="form-control" />
-          <ErrorMessage name="goles_equipo1" class="text-danger small" />
+          <div class="col-md-6">
+            <label for="equipo2_id" class="form-label">Equipo 2</label>
+            <Field name="equipo2_id" as="select" class="form-select">
+              <option disabled value="">Selecciona un equipo</option>
+              <option v-for="equipo in equipos" :key="equipo.id" :value="equipo.id">
+                {{ equipo.nombre }}
+              </option>
+            </Field>
+            <ErrorMessage name="equipo2_id" class="text-danger small" />
+          </div>
         </div>
-        <div class="col-md-6 mb-3">
-          <label for="goles_equipo2" class="form-label">Goles Equipo 2</label>
-          <Field name="goles_equipo2" type="number" min="0" class="form-control" />
-          <ErrorMessage name="goles_equipo2" class="text-danger small" />
+
+        <!-- Fecha y hora -->
+        <div class="row mt-3 g-3">
+          <div class="col-md-6">
+            <label for="fecha_partido" class="form-label">Fecha</label>
+            <Field name="fecha_partido" type="date" class="form-control" />
+            <ErrorMessage name="fecha_partido" class="text-danger small" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="hora" class="form-label">Hora</label>
+            <Field name="hora" type="time" class="form-control" />
+            <ErrorMessage name="hora" class="text-danger small" />
+          </div>
         </div>
-      </div>
 
-      <!-- Estadísticas por jugador separadas por equipo -->
-      <div class="mt-4" v-if="esEdicion">
-        <h5>Estadísticas por jugador</h5>
+        <!-- Árbitro -->
+        <div class="mt-3">
+          <label for="arbitro" class="form-label">Árbitro</label>
+          <Field name="arbitro" type="text" class="form-control" />
+          <ErrorMessage name="arbitro" class="text-danger small" />
+        </div>
 
-        <!-- Equipo 1 -->
-        <div class="mb-4">
-          <h6 class="text-primary">Equipo: {{equipos.find(e => e.id == initialValues.equipo1_id)?.nombre || 'Equipo 1'
-            }}</h6>
+        <!-- Estado y goles -->
+        <div class="row mt-3 g-3" v-if="esEdicion">
+          <div class="col-md-4">
+            <label for="estado_partido" class="form-label">Estado del partido</label>
+            <Field name="estado_partido" as="select" class="form-select">
+              <option value="pendiente">Pendiente</option>
+              <option value="en_curso">En curso</option>
+              <option value="finalizado">Finalizado</option>
+            </Field>
+            <ErrorMessage name="estado_partido" class="text-danger small" />
+          </div>
 
-          <div
-            v-for="(estat, index) in estadisticas.filter(e => jugadores.find(j => j.id === e.player_id)?.team_id == initialValues.equipo1_id)"
-            :key="estat.player_id" class="border rounded p-3 mb-3">
-            <strong>{{jugadores.find(j => j.id === estat.player_id)?.nombre || 'Jugador ' + estat.player_id}}</strong>
-            <div class="row mt-2">
-              <div class="col">
-                <label>Goles</label>
-                <input type="number" min="0" class="form-control" v-model.number="estat.goles" />
+          <div class="col-md-4">
+            <label for="goles_equipo1" class="form-label">Goles Equipo 1</label>
+            <Field name="goles_equipo1" type="number" min="0" class="form-control" />
+            <ErrorMessage name="goles_equipo1" class="text-danger small" />
+          </div>
+
+          <div class="col-md-4">
+            <label for="goles_equipo2" class="form-label">Goles Equipo 2</label>
+            <Field name="goles_equipo2" type="number" min="0" class="form-control" />
+            <ErrorMessage name="goles_equipo2" class="text-danger small" />
+          </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="mt-5" v-if="esEdicion">
+          <h5 class="text-primary mb-3"><i class="bi bi-graph-up-arrow me-2"></i>Estadísticas por jugador</h5>
+
+          <div class="row g-4">
+            <!-- Equipo 1 -->
+            <div class="col-12 col-lg-6">
+              <h6 class="text-primary">{{ equipos.find(e => e.id == initialValues.equipo1_id)?.nombre || 'Equipo 1' }}</h6>
+
+              <div v-for="estat in estadisticas.filter(e => jugadores.find(j => j.id === e.player_id)?.team_id == initialValues.equipo1_id)" :key="estat.player_id"
+                class="border p-3 rounded mb-3 bg-light-subtle">
+                <strong>{{ jugadores.find(j => j.id === estat.player_id)?.nombre }}</strong>
+                <div class="row mt-2 g-2">
+                  <div class="col"><label>Goles</label><input type="number" v-model.number="estat.goles" min="0" class="form-control" /></div>
+                  <div class="col"><label>Asistencias</label><input type="number" v-model.number="estat.asistencias" min="0" class="form-control" /></div>
+                  <div class="col"><label>Amarillas</label><input type="number" v-model.number="estat.amarillas" min="0" class="form-control" /></div>
+                  <div class="col"><label>Rojas</label><input type="number" v-model.number="estat.rojas" min="0" class="form-control" /></div>
+                </div>
               </div>
-              <div class="col">
-                <label>Asistencias</label>
-                <input type="number" min="0" class="form-control" v-model.number="estat.asistencias" />
-              </div>
-              <div class="col">
-                <label>Amarillas</label>
-                <input type="number" min="0" class="form-control" v-model.number="estat.amarillas" />
-              </div>
-              <div class="col">
-                <label>Rojas</label>
-                <input type="number" min="0" class="form-control" v-model.number="estat.rojas" />
+            </div>
+
+            <!-- Equipo 2 -->
+            <div class="col-12 col-lg-6">
+              <h6 class="text-success">{{ equipos.find(e => e.id == initialValues.equipo2_id)?.nombre || 'Equipo 2' }}</h6>
+
+              <div v-for="estat in estadisticas.filter(e => jugadores.find(j => j.id === e.player_id)?.team_id == initialValues.equipo2_id)" :key="estat.player_id"
+                class="border p-3 rounded mb-3 bg-light-subtle">
+                <strong>{{ jugadores.find(j => j.id === estat.player_id)?.nombre }}</strong>
+                <div class="row mt-2 g-2">
+                  <div class="col"><label>Goles</label><input type="number" v-model.number="estat.goles" min="0" class="form-control" /></div>
+                  <div class="col"><label>Asistencias</label><input type="number" v-model.number="estat.asistencias" min="0" class="form-control" /></div>
+                  <div class="col"><label>Amarillas</label><input type="number" v-model.number="estat.amarillas" min="0" class="form-control" /></div>
+                  <div class="col"><label>Rojas</label><input type="number" v-model.number="estat.rojas" min="0" class="form-control" /></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Equipo 2 -->
-        <div>
-          <h6 class="text-success">Equipo: {{equipos.find(e => e.id == initialValues.equipo2_id)?.nombre || 'Equipo 2'
-            }}</h6>
-
-          <div
-            v-for="(estat, index) in estadisticas.filter(e => jugadores.find(j => j.id === e.player_id)?.team_id == initialValues.equipo2_id)"
-            :key="estat.player_id" class="border rounded p-3 mb-3">
-            <strong>{{jugadores.find(j => j.id === estat.player_id)?.nombre || 'Jugador ' + estat.player_id}}</strong>
-            <div class="row mt-2">
-              <div class="col">
-                <label>Goles</label>
-                <input type="number" min="0" class="form-control" v-model.number="estat.goles" />
-              </div>
-              <div class="col">
-                <label>Asistencias</label>
-                <input type="number" min="0" class="form-control" v-model.number="estat.asistencias" />
-              </div>
-              <div class="col">
-                <label>Amarillas</label>
-                <input type="number" min="0" class="form-control" v-model.number="estat.amarillas" />
-              </div>
-              <div class="col">
-                <label>Rojas</label>
-                <input type="number" min="0" class="form-control" v-model.number="estat.rojas" />
-              </div>
-            </div>
-          </div>
+        <!-- Botón -->
+        <div class="mt-4">
+          <button type="submit" class="btn btn-primary w-100">
+            {{ esEdicion ? 'Guardar Cambios' : 'Crear Partido' }}
+          </button>
         </div>
-      </div>
-
-
-
-      <div class="mt-4">
-        <button type="submit" class="btn btn-primary w-100">
-          {{ esEdicion ? 'Guardar Cambios' : 'Crear Partido' }}
-        </button>
-      </div>
-    </Form>
+      </Form>
+    </div>
   </div>
 </template>

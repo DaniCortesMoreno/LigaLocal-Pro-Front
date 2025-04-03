@@ -53,32 +53,44 @@ export default {
 </script>
 
 <template>
-    <div class="container py-5" style="max-width: 600px;">
-      <h2 class="text-center mb-4">Mi Perfil</h2>
-  
-      <Form :validation-schema="schema" @submit="onSubmit">
-        <div class="mb-3">
-          <label for="nombre" class="form-label">Nombre</label>
-          <Field name="nombre" v-model="form.nombre" class="form-control" />
-          <ErrorMessage name="nombre" class="text-danger small" />
-        </div>
-  
-        <div class="mb-3">
-          <label for="apellidos" class="form-label">Apellidos</label>
-          <Field name="apellidos" v-model="form.apellidos" class="form-control" />
-          <ErrorMessage name="apellidos" class="text-danger small" />
-        </div>
-  
-        <div class="mb-3">
-          <label for="email" class="form-label">Correo electrónico</label>
-          <Field name="email" v-model="form.email" class="form-control" />
-          <ErrorMessage name="email" class="text-danger small" />
-        </div>
-  
-        <button type="submit" class="btn btn-primary w-100 mt-3">Guardar cambios</button>
-      </Form>
+  <div class="container py-5" style="max-width: 600px;">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h2 class="text-center mb-4 fw-bold text-primary">
+          <i class="bi bi-person-circle me-2"></i>Mi Perfil
+        </h2>
+
+        <Form :validation-schema="schema" @submit="onSubmit">
+          <!-- Nombre -->
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <Field name="nombre" v-model="form.nombre" class="form-control" />
+            <ErrorMessage name="nombre" class="text-danger small" />
+          </div>
+
+          <!-- Apellidos -->
+          <div class="mb-3">
+            <label for="apellidos" class="form-label">Apellidos</label>
+            <Field name="apellidos" v-model="form.apellidos" class="form-control" />
+            <ErrorMessage name="apellidos" class="text-danger small" />
+          </div>
+
+          <!-- Email -->
+          <div class="mb-4">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <Field name="email" v-model="form.email" class="form-control" />
+            <ErrorMessage name="email" class="text-danger small" />
+          </div>
+
+          <!-- Botón -->
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
+          </div>
+        </Form>
+      </div>
     </div>
-  </template>
+  </div>
+</template>
   
 
   
