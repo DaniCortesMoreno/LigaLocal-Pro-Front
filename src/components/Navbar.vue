@@ -14,10 +14,7 @@ const logout = () => {
 
 <template>
   <!-- Bienvenida -->
-  <div
-    v-if="isLoggedIn"
-    class="bg-light small text-muted text-end px-4 py-1 border-bottom"
-  >
+  <div v-if="isLoggedIn" class="bg-light small text-muted text-end px-4 py-1 border-bottom">
     Bienvenido, <strong>{{ userStore.user?.nombre }} {{ userStore.user?.apellidos }}</strong>
   </div>
 
@@ -59,6 +56,11 @@ const logout = () => {
             <li class="nav-item">
               <button class="btn btn-outline-secondary btn-sm px-3" @click="logout">Cerrar sesión</button>
             </li>
+            <!--<li class="nav-item">
+              <button class="btn btn-sm btn-outline-light" @click="$emit('cambiar-tema')">
+                <i class="bi bi-moon-stars"></i> Cambiar tema
+              </button>
+            </li>-->
           </template>
         </ul>
       </div>

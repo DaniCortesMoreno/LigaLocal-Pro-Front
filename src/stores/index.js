@@ -359,5 +359,15 @@ export const useUserStore = defineStore("data", {
         return [];
       }
     },
+
+    async getUsersInvitadosTorneo(id) {
+      try {
+        const response = await apiClient.get(`${SERVER}/tournaments/${id}/invited-users`);
+        return response.data.data;
+      } catch (error) {
+        this.addMessage(error.response.data.message, 'error')
+        return [];
+      }
+    },
   }
 })

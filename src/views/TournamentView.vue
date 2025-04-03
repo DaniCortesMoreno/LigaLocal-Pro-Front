@@ -32,8 +32,28 @@ export default {
       const esEditor = this.torneo.invited_users?.some(
         invitado => invitado.id === this.user.id && invitado.pivot?.role === 'editor'
       );
-
+      console.log(this.user)
       return esCreador || esEditor;
+    },
+
+    puedeVerInvitadoEspectador() {
+
+      if (!this.user || !this.torneo) return false;
+
+      // Es el creador del torneo
+      const esCreador = this.user.id === this.torneo.user_id;
+
+      // Es un invitado con rol editor
+      const esEditor = this.torneo.invited_users?.some(
+        invitado => invitado.id === this.user.id && invitado.pivot?.role === 'editor'
+      );
+
+      // Es un invitado con rol espectador
+      const esEspectador = this.torneo.invited_users?.some(
+        invitado => invitado.id === this.user.id && invitado.pivot?.role === 'viewer'
+      )
+
+      return esCreador || esEditor || esEspectador;
     }
 
   },
@@ -46,7 +66,8 @@ export default {
       },
       creadorTorneo: "Cargando...",
       equipos: [],
-      partidos: []
+      partidos: [],
+      usuarios: [],
     }
   },
   async mounted() {
@@ -59,9 +80,13 @@ export default {
     this.equipos = await this.getTeamsXTorneo(this.id);
 
     this.partidos = await this.getPartidosXTorneo(this.id);
+
+    this.usuarios = await this.getUsersInvitadosTorneo(this.id)
+
+
   },
   methods: {
-    ...mapActions(useUserStore, ['getTorneo', 'getUser', 'getTeamsXTorneo', 'getPartidosXTorneo', 'deletePartido']),
+    ...mapActions(useUserStore, ['getTorneo', 'getUser', 'getTeamsXTorneo', 'getPartidosXTorneo', 'deletePartido', 'getUsersInvitadosTorneo']),
 
     async getCreadorTorneo() {
       const response = await this.getUser(this.torneo.user_id);
@@ -89,7 +114,7 @@ export default {
 
     verEquipo(idEquipo) {
       this.$router.push(`/equipos/${idEquipo}`);
-    }
+    },
 
 
   }
@@ -211,6 +236,18 @@ export default {
         Crear nuevo partido
       </router-link>
     </div>
+
+    <div v-if="(esGestorDelTorneo || this.user) && usuarios.length > 0">
+      <h5>Usuarios Del Torneo</h5>
+      <ul>
+        <li>{{ creadorTorneo }} (Owner)</li>
+        <li v-for="usuario in usuarios" :key="usuario.id">
+          {{ usuario.nombre }} {{ usuario.apellidos }} ({{ usuario.role || 'Sin Definir' }})
+        </li>
+      </ul>
+    </div>
+
+
   </div>
 </template>
 
@@ -218,9 +255,11 @@ export default {
 .card-title {
   font-size: 1.8rem;
 }
+
 .table thead th {
   vertical-align: middle;
 }
+
 .table td,
 .table th {
   padding: 0.9rem 1rem;
