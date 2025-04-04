@@ -248,7 +248,7 @@ export default {
     </div>
   </section>
 
-  <section v-if="(esGestorDelTorneo || user) && usuarios.length > 0" class="container mt-5 mb-5">
+  <section v-if="(esGestorDelTorneo) && usuarios.length > 0" class="container mt-5 mb-5">
     <div class="row g-4">
       <!-- Lista de usuarios -->
       <div :class="['card shadow-sm p-4 h-100', esGestorDelTorneo ? 'col-md-6' : 'col-12']">
