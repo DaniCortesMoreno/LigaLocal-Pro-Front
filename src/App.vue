@@ -20,7 +20,7 @@ import Footer from './components/Footer.vue';
 <style>
 /* Importaciones */
 @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css');
-@import url('https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/zephyr/bootstrap.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.2/litera/bootstrap.min.css');
 
 /* Estilo general del body */
 body {
@@ -67,5 +67,6 @@ textarea {
   margin-top: 0.25rem;
   display: block;
 }
+
 </style>
 

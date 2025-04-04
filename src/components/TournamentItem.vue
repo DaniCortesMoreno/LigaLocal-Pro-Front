@@ -42,9 +42,9 @@ export default {
   
       <!-- Visibilidad con badge -->
       <td>
-        <span class="badge" :class="{
-          'bg-primary': torneo.visibilidad === 'público',
-          'bg-secondary': torneo.visibilidad === 'privado'
+        <span class="badge text-dark" :class="{
+          'bg': torneo.visibilidad === 'público',
+          'bg': torneo.visibilidad === 'privado'
         }">
           {{ torneo.visibilidad }}
         </span>

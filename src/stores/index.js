@@ -369,5 +369,40 @@ export const useUserStore = defineStore("data", {
         return [];
       }
     },
+
+    async createJugador(payload) {
+      try {
+        const { team_id, ...data } = payload;
+        const response = await apiClient.post(`${SERVER}/teams/${team_id}/players`, data);
+        this.addMessage("Jugador creado correctamente", "success");
+        return response.data.data;
+      } catch (error) {
+        this.addMessage("Error al crear jugador", "error");
+        return null;
+      }
+    },
+
+    async getJugador(id) {
+      try {
+        const response = await apiClient.get(`${SERVER}/players/${id}`);
+        return response.data.data;
+      } catch (error) {
+        this.addMessage("Error al obtener jugador", "error");
+        return null;
+      }
+    },
+
+    async updateJugador(id, data) {
+      try {
+        const response = await apiClient.put(`${SERVER}/players/${id}`, data);
+        this.addMessage("Jugador actualizado correctamente", "success");
+        return response.data.data;
+      } catch (error) {
+        this.addMessage("Error al actualizar jugador", "error");
+        return null;
+      }
+    },
+
+
   }
 })

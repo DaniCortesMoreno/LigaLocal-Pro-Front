@@ -22,15 +22,15 @@ export default {
     },*/
     ...mapState(useUserStore, ['user']),
     esGestorDelTorneo() {
-
+      console.log(this.torneo)
       if (!this.user || !this.torneo) return false;
 
       // Es el creador del torneo
-      const esCreador = this.user.id === this.torneo.user_id;
+      const esCreador = this.user.id == this.torneo.user_id;
 
       // Es un invitado con rol editor
       const esEditor = this.torneo.invited_users?.some(
-        invitado => invitado.id === this.user.id && invitado.pivot?.role === 'editor'
+        invitado => invitado.id == this.user.id && invitado.pivot?.role === 'editor'
       );
       console.log(this.user)
       return esCreador || esEditor;
@@ -248,7 +248,7 @@ export default {
     </div>
   </section>
 
-  <section v-if="(esGestorDelTorneo || user) && usuarios.length > 0" class="container mt-5">
+  <section v-if="(esGestorDelTorneo || user) && usuarios.length > 0" class="container mt-5 mb-5">
     <div class="row g-4">
       <!-- Lista de usuarios -->
       <div :class="['card shadow-sm p-4 h-100', esGestorDelTorneo ? 'col-md-6' : 'col-12']">
@@ -260,16 +260,20 @@ export default {
           </li>
         </ul>
       </div>
+    </div>
+  </section>
 
-      <!-- Formulario de invitación -->
-      <div class="col-md-6" v-if="esGestorDelTorneo">
-        <div class="card shadow-sm p-4 h-100">
-          <h5 class="mb-3">Invitar usuario</h5>
-          <InviteUser :torneoId="torneo.id" />
-        </div>
+  <section class="container mt-5 mb-5">
+    <!-- Formulario de invitación -->
+    <div class=" ['card shadow-sm p-4 h-100', esGestorDelTorneo ? 'col-md-6' : 'col-12']" v-if="esGestorDelTorneo">
+      <div class="card shadow-sm p-4 h-100">
+        <h5 class="mb-3">Invitar usuario</h5>
+        <InviteUser :torneoId="torneo.id" />
       </div>
     </div>
   </section>
+
+
 
 </template>
 
