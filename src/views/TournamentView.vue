@@ -143,30 +143,6 @@ export default {
 
 <template>
 
-  <!-- Navegación entre pestañas -->
-  <div class="container mt-5">
-    <ul class="nav nav-tabs">
-      <li class="nav-item">
-        <a class="nav-link" :class="{ active: pestañaActiva === 'equipos' }" href="#"
-          @click.prevent="cambiarPestana('equipos')">
-          <i class="bi bi-people-fill me-1"></i> Equipos
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" :class="{ active: pestañaActiva === 'partidos' }" href="#"
-          @click.prevent="cambiarPestana('partidos')">
-          <i class="bi bi-calendar-event me-1"></i> Partidos
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" :class="{ active: pestañaActiva === 'clasificacion' }" href="#"
-          @click.prevent="cambiarPestana('clasificacion')">
-          <i class="bi bi-list-ol me-1"></i> Clasificación
-        </a>
-      </li>
-    </ul>
-  </div>
-
   <section class="container py-5" v-if="torneo && Object.keys(torneo).length > 0">
     <div class="bg-white shadow-lg rounded-4 p-5 border border-light-subtle">
       <h2 class="text-center text-primary display-4 fw-bold mb-5">
@@ -238,6 +214,31 @@ export default {
     </div>
   </div>
 
+
+  <!-- Navegación entre pestañas -->
+  <div class="container mt-5">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link" :class="{ active: pestañaActiva === 'equipos' }" href="#"
+          @click.prevent="cambiarPestana('equipos')">
+          <i class="bi bi-people-fill me-1"></i> Equipos
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" :class="{ active: pestañaActiva === 'partidos' }" href="#"
+          @click.prevent="cambiarPestana('partidos')">
+          <i class="bi bi-calendar-event me-1"></i> Partidos
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" :class="{ active: pestañaActiva === 'clasificacion' }" href="#"
+          @click.prevent="cambiarPestana('clasificacion')">
+          <i class="bi bi-list-ol me-1"></i> Clasificación
+        </a>
+      </li>
+    </ul>
+  </div>
+
   <!-- Equipos -->
   <section class="container mt-4" v-if="pestañaActiva === 'equipos'">
     <TeamList :equipos="equipos" @crearEquipo="crearEquipo" :puedeCrear="esGestorDelTorneo" @verEquipo="verEquipo" />
@@ -290,7 +291,7 @@ export default {
     </div>
 
 
-  <!-- Clasificacion -->
+    <!-- Clasificacion -->
   </section>
   <section class="container mt-4" v-if="pestañaActiva === 'clasificacion'">
     <div class="card shadow-sm rounded-4 p-4">
@@ -319,7 +320,7 @@ export default {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(equipo, index) in clasificacion" :key="equipo.id">
+            <tr v-for="(equipo, index) in clasificacion" :key="equipo.id" :class="{ 'primer-puesto': index == 0 }">
               <td>{{ index + 1 }}</td>
               <td>{{ equipo.nombre_equipo }}</td>
               <td>{{ equipo.jugados }}</td>
@@ -381,4 +382,9 @@ export default {
 .table th {
   padding: 0.9rem 1rem;
 }
+
+.table tbody .primer-puesto td {
+  background-color: #d4edda !important;
+}
+
 </style>
