@@ -68,6 +68,8 @@ export default {
       equipos: [],
       partidos: [],
       usuarios: [],
+      clasificacion: [],
+      pestañaActiva: 'equipos', // pestaña activa
     }
   },
   async mounted() {
@@ -86,7 +88,22 @@ export default {
 
   },
   methods: {
-    ...mapActions(useUserStore, ['getTorneo', 'getUser', 'getTeamsXTorneo', 'getPartidosXTorneo', 'deletePartido', 'getUsersInvitadosTorneo']),
+    ...mapActions(useUserStore, ['getTorneo', 'getUser', 'getTeamsXTorneo', 'getPartidosXTorneo',
+      'deletePartido', 'getUsersInvitadosTorneo', 'getClasificacionTorneo', 'getTeam']),
+    async getNombreTeam(id) {
+      return await this.getTeam(id).nombre;
+    },
+
+    async mountedClasificacion() {
+      this.clasificacion = await this.getClasificacionTorneo(this.id);
+    },
+
+    cambiarPestana(nombre) {
+      this.pestañaActiva = nombre;
+      if (nombre === 'clasificacion') {
+        this.mountedClasificacion();
+      }
+    },
 
     async getCreadorTorneo() {
       const response = await this.getUser(this.torneo.user_id);
@@ -125,6 +142,31 @@ export default {
 
 
 <template>
+
+  <!-- Navegación entre pestañas -->
+  <div class="container mt-5">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link" :class="{ active: pestañaActiva === 'equipos' }" href="#"
+          @click.prevent="cambiarPestana('equipos')">
+          <i class="bi bi-people-fill me-1"></i> Equipos
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" :class="{ active: pestañaActiva === 'partidos' }" href="#"
+          @click.prevent="cambiarPestana('partidos')">
+          <i class="bi bi-calendar-event me-1"></i> Partidos
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" :class="{ active: pestañaActiva === 'clasificacion' }" href="#"
+          @click.prevent="cambiarPestana('clasificacion')">
+          <i class="bi bi-list-ol me-1"></i> Clasificación
+        </a>
+      </li>
+    </ul>
+  </div>
+
   <section class="container py-5" v-if="torneo && Object.keys(torneo).length > 0">
     <div class="bg-white shadow-lg rounded-4 p-5 border border-light-subtle">
       <h2 class="text-center text-primary display-4 fw-bold mb-5">
@@ -197,14 +239,14 @@ export default {
   </div>
 
   <!-- Equipos -->
-  <section class="container mt-5">
+  <section class="container mt-4" v-if="pestañaActiva === 'equipos'">
     <TeamList :equipos="equipos" @crearEquipo="crearEquipo" :puedeCrear="esGestorDelTorneo" @verEquipo="verEquipo" />
   </section>
 
 
 
   <!-- Partidos -->
-  <section class="container mt-5">
+  <section class="container mt-5" v-if="pestañaActiva === 'partidos'">
     <div class="card shadow-sm rounded-3">
       <div class="card-body">
         <h3 class="text-center fw-bold mb-4 text-primary">Partidos del Torneo</h3>
@@ -246,39 +288,80 @@ export default {
         </div>
       </div>
     </div>
+
+
+  <!-- Clasificacion -->
+  </section>
+  <section class="container mt-4" v-if="pestañaActiva === 'clasificacion'">
+    <div class="card shadow-sm rounded-4 p-4">
+      <h3 class="text-center mb-4 text-primary">
+        <i class="bi bi-list-ol me-2"></i>Clasificación del Torneo
+      </h3>
+
+      <div v-if="clasificacion.length === 0" class="alert alert-warning text-center">
+        Aún no hay datos suficientes para calcular la clasificación.
+      </div>
+
+      <div v-else class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>#</th>
+              <th>Equipo</th>
+              <th>PJ</th>
+              <th>G</th>
+              <th>E</th>
+              <th>P</th>
+              <th>GF</th>
+              <th>GC</th>
+              <th>DIF</th>
+              <th>PTS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(equipo, index) in clasificacion" :key="equipo.id">
+              <td>{{ index + 1 }}</td>
+              <td>{{ equipo.nombre_equipo }}</td>
+              <td>{{ equipo.jugados }}</td>
+              <td>{{ equipo.ganados }}</td>
+              <td>{{ equipo.empatados }}</td>
+              <td>{{ equipo.perdidos }}</td>
+              <td>{{ equipo.goles_favor }}</td>
+              <td>{{ equipo.goles_contra }}</td>
+              <td>{{ equipo.diferencia_goles }}</td>
+              <td><strong>{{ equipo.puntos }}</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </section>
 
   <section v-if="esGestorDelTorneo" class="container mt-5 mb-5">
-  <div class="row g-4">
-    <!-- Lista de usuarios -->
-    <div
-      v-if="usuarios.length > 0"
-      class="col-md-6"
-    >
-      <div class="card shadow-sm p-4 h-100">
-        <h5 class="mb-3">Usuarios del Torneo</h5>
-        <ul class="list-group">
-          <li class="list-group-item">{{ creadorTorneo }} (Owner)</li>
-          <li
-            v-for="usuario in usuarios"
-            :key="usuario.id"
-            class="list-group-item"
-          >
-            {{ usuario.nombre }} {{ usuario.apellidos }} ({{ usuario.role || 'Sin Definir' }})
-          </li>
-        </ul>
+    <div class="row g-4">
+      <!-- Lista de usuarios -->
+      <div v-if="usuarios.length > 0" class="col-md-6">
+        <div class="card shadow-sm p-4 h-100">
+          <h5 class="mb-3">Usuarios del Torneo</h5>
+          <ul class="list-group">
+            <li class="list-group-item">{{ creadorTorneo }} (Owner)</li>
+            <li v-for="usuario in usuarios" :key="usuario.id" class="list-group-item">
+              {{ usuario.nombre }} {{ usuario.apellidos }} ({{ usuario.role || 'Sin Definir' }})
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <!-- Formulario de invitación -->
-    <div :class="usuarios.length > 0 ? 'col-md-6' : 'col-12'">
-      <div class="card shadow-sm p-4 h-100">
-        <h5 class="mb-3">Invitar usuario</h5>
-        <InviteUser :torneoId="torneo.id" />
+      <!-- Formulario de invitación -->
+      <div :class="usuarios.length > 0 ? 'col-md-6' : 'col-12'">
+        <div class="card shadow-sm p-4 h-100">
+          <h5 class="mb-3">Invitar usuario</h5>
+          <InviteUser :torneoId="torneo.id" />
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+
 
 
 

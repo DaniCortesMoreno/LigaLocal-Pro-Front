@@ -211,6 +211,16 @@ export const useUserStore = defineStore("data", {
 
     },
 
+    async getTeam(id) {
+      try {
+        const response = await apiClient.get(`${SERVER}/teams/${id}`);
+        return response.data.data;
+      } catch (error) {
+        this.addMessage(error.response.data.message, 'error')
+        return null;
+      }
+    },
+
     async addEquipo(id, equipo) {
       try {
         const response = await apiClient.post(`${SERVER}/tournaments/${id}/teams`, equipo);
@@ -413,6 +423,17 @@ export const useUserStore = defineStore("data", {
         return null;
       }
     },
+
+    async getClasificacionTorneo(torneoId) {
+      try {
+        const response = await apiClient.get(`/tournaments/${torneoId}/clasificacion`);
+        return response.data.data; // ya viene ordenado
+      } catch (error) {
+        console.error("Error cargando clasificación:", error);
+        return [];
+      }
+    }
+    
 
 
   }
