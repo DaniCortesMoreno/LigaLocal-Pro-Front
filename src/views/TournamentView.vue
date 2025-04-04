@@ -248,30 +248,38 @@ export default {
     </div>
   </section>
 
-  <section v-if="(esGestorDelTorneo) && usuarios.length > 0" class="container mt-5 mb-5">
-    <div class="row g-4">
-      <!-- Lista de usuarios -->
-      <div :class="['card shadow-sm p-4 h-100', esGestorDelTorneo ? 'col-md-6' : 'col-12']">
+  <section v-if="esGestorDelTorneo" class="container mt-5 mb-5">
+  <div class="row g-4">
+    <!-- Lista de usuarios -->
+    <div
+      v-if="usuarios.length > 0"
+      class="col-md-6"
+    >
+      <div class="card shadow-sm p-4 h-100">
         <h5 class="mb-3">Usuarios del Torneo</h5>
         <ul class="list-group">
           <li class="list-group-item">{{ creadorTorneo }} (Owner)</li>
-          <li v-for="usuario in usuarios" :key="usuario.id" class="list-group-item">
+          <li
+            v-for="usuario in usuarios"
+            :key="usuario.id"
+            class="list-group-item"
+          >
             {{ usuario.nombre }} {{ usuario.apellidos }} ({{ usuario.role || 'Sin Definir' }})
           </li>
         </ul>
       </div>
     </div>
-  </section>
 
-  <section class="container mt-5 mb-5">
     <!-- Formulario de invitación -->
-    <div class=" ['card shadow-sm p-4 h-100', esGestorDelTorneo ? 'col-md-6' : 'col-12']" v-if="esGestorDelTorneo">
+    <div :class="usuarios.length > 0 ? 'col-md-6' : 'col-12'">
       <div class="card shadow-sm p-4 h-100">
         <h5 class="mb-3">Invitar usuario</h5>
         <InviteUser :torneoId="torneo.id" />
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
 
 

@@ -22,6 +22,7 @@
             <th>Estado</th>
             <th>Formato</th>
             <th>Visibilidad</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -64,11 +65,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useUserStore, ["getTorneosDelUserActual"]),
+    ...mapActions(useUserStore, ["getTorneosDelUserActual", "deleteTorneo"]),
 
     async cargaTorneosDelUserActual() {
       this.torneos = await this.getTorneosDelUserActual()
-    }
+    },
   },
 
   async mounted() {

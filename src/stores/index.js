@@ -152,6 +152,17 @@ export const useUserStore = defineStore("data", {
       }
     },
 
+    async deleteTorneo(id) {
+      try {
+        const response = await apiClient.delete(`${SERVER}/tournaments/${id}`);
+        this.addMessage("Torneo eliminado correctamente", 'success')
+        return true;
+      } catch (error) {
+        this.addMessage("Error al eliminar el torneo", 'error')
+        return false;
+      }
+    },
+
     async getUser(id) {
       try {
         const response = await apiClient.get(`${SERVER}/users/${id}`);

@@ -16,7 +16,7 @@ export default {
         ...mapActions(useUserStore, ['getTorneosInvitado']),
         async cargarTorneos() {
             this.torneos = await this.getTorneosInvitado();
-        }
+        },
     },
     async mounted() {
         await this.cargarTorneos();
@@ -60,6 +60,7 @@ export default {
                         <router-link :to="`/torneos/${torneo.id}`" class="btn btn-outline-primary w-100">
                             Ver Torneo
                         </router-link>
+
                     </div>
                 </div>
             </div>
