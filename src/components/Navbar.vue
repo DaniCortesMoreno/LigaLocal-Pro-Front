@@ -2,6 +2,10 @@
 import { computed } from 'vue'
 import { useUserStore } from "@/stores"
 import router from '@/router'
+import { useDark, useToggle } from '@vueuse/core'
+
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
 
 const userStore = useUserStore()
 const isLoggedIn = computed(() => userStore.loggedIn)
@@ -24,6 +28,10 @@ const logout = () => {
       <router-link class="navbar-brand fw-bold text-primary fs-4" to="/">LigaLocal Pro</router-link>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
         <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <button class="btn btn-outline-secondary btn-sm ms-3" @click="toggleDark()" title="Cambiar tema">
+        <i :class="isDark ? 'bi bi-moon-fill' : 'bi bi-sun-fill'"></i>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarMenu">

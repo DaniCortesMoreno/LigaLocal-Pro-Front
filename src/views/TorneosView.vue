@@ -136,4 +136,16 @@ export default {
 .card-title {
   font-size: 1.1rem;
 }
+
+/* Modo oscuro: estilos para input y select placeholders */
+:deep(body[theme="custom-dark"]) ::placeholder {
+  color: #dddddd !important;
+  opacity: 1; /* Mejora la visibilidad en algunos navegadores */
+}
+
+/* Si usas selects y quieres también texto blanco en modo oscuro */
+:deep(body[theme="custom-dark"]) select {
+  color: #ffffff !important;
+}
+
 </style>

@@ -10,7 +10,7 @@ export default {
 </script>
 
 <template>
-  <section class="bg-white text-center py-5 border-bottom hero-section">
+  <section class="text-center py-5 border-bottom hero-section">
     <div class="container py-5">
       <h1 class="display-3 fw-bold text-dark mb-3">⚽ LigaLocal Pro</h1>
       <p class="lead text-muted mb-4">Organiza torneos de fútbol de forma rápida, sencilla y profesional.</p>
@@ -33,8 +33,6 @@ export default {
 </template>
 
 <style scoped>
-.hero-section {
-  background: linear-gradient(to right, #f8f9fa, #ffffff);
-}
+
 </style>
 

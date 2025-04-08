@@ -49,7 +49,6 @@ export default {
         //values.equipo_id = this.equipo_id;
         const successEdit = await this.updateEquipo(this.equipo_id, values);
         if (successEdit) {
-          console.log("Console log: " + this.equipo.tournament_id);
           router.push(`/torneos/${this.equipo.tournament_id}`);
         } else {
           alert("No se pudo crear el equipo.");

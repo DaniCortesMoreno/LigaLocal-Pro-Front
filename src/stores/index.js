@@ -437,7 +437,6 @@ export const useUserStore = defineStore("data", {
     async getRankingTorneo(torneoId) {
       try {
         const response = await apiClient.get(`${SERVER}/tournaments/${torneoId}/ranking`);
-        console.log("Desde store:" + response.data);
         return response.data.data;
       } catch (error) {
         console.error("Error al obtener el ranking", error);

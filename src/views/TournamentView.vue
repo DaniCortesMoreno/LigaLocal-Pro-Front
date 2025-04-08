@@ -22,7 +22,6 @@ export default {
     },*/
     ...mapState(useUserStore, ['user']),
     esGestorDelTorneo() {
-      console.log(this.torneo)
       if (!this.user || !this.torneo) return false;
 
       // Es el creador del torneo
@@ -32,7 +31,6 @@ export default {
       const esEditor = this.torneo.invited_users?.some(
         invitado => invitado.id == this.user.id && invitado.pivot?.role === 'editor'
       );
-      console.log(this.user)
       return esCreador || esEditor;
     },
 
