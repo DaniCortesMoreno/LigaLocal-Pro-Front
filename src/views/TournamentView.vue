@@ -356,8 +356,8 @@ export default {
               <th>PTS</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="(equipo, index) in clasificacion" :key="equipo.id" :class="{ 'primer-puesto': index == 0 }">
+          <tbody> 
+            <tr v-for="(equipo, index) in clasificacion" :key="equipo.id"> <!--:class="{ 'primer-puesto': index == 0 }"-->
               <td>{{ index + 1 }}</td>
               <td>{{ equipo.nombre_equipo }}</td>
               <td>{{ equipo.jugados }}</td>

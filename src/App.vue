@@ -207,5 +207,91 @@ body[theme="custom-dark"] select {
   background-color: #2c2c2c !important;
   border-color: #444 !important;
 }
+
+body[theme="custom-dark"] .table {
+  background-color: #1f1f1f;
+  color: #f1f1f1;
+}
+
+body[theme="custom-dark"] .table th {
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+body[theme="custom-dark"] .table td {
+  background-color: #1f1f1f;
+  color: #e0e0e0;
+}
+
+body[theme="custom-dark"] .table tbody tr {
+  border-color: #333;
+}
+
+body[theme="custom-dark"] .table-striped tbody tr:nth-of-type(odd) {
+  background-color: #242424;
+}
+
+body[theme="custom-dark"] .badge {
+  background-color: #ffc107;
+  color: #000;
+}
+
+/* Cards */
+body[theme="custom-dark"] .card {
+  background-color: #242424;
+  color: #ffffff;
+  border-color: #3a3b42;
+}
+
+/* List group items dentro de cards */
+body[theme="custom-dark"] .list-group-item {
+  background-color: #2e2e2e;
+  color: #ffffff;
+  border-color: #444;
+}
+
+/* Botones generales en modo oscuro */
+body[theme="custom-dark"] .btn {
+  background-color: #2e2e2e;
+  border-color: #444;
+  color: #ffffff;
+}
+
+body[theme="custom-dark"] .btn:hover {
+  background-color: #3a3b42;
+  border-color: #555;
+  color: #ffffff;
+}
+
+/* Botones outline (como btn-outline-secondary) */
+body[theme="custom-dark"] .btn-outline-secondary {
+  border-color: #888;
+  color: #cccccc;
+}
+
+body[theme="custom-dark"] .btn-outline-secondary:hover {
+  background-color: #444;
+  color: #ffffff;
+  border-color: #aaa;
+}
+
+/* Botones de eliminar (si usas btn-danger) */
+body[theme="custom-dark"] .btn-danger {
+  background-color: #a32929;
+  border-color: #882222;
+  color: #ffffff;
+}
+
+body[theme="custom-dark"] .btn-danger:hover {
+  background-color: #c13434;
+  border-color: #a32929;
+}
+
+/* Transición suave */
+.btn {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+
 </style>
 
