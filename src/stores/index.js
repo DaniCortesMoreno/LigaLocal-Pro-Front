@@ -426,15 +426,34 @@ export const useUserStore = defineStore("data", {
 
     async getClasificacionTorneo(torneoId) {
       try {
-        const response = await apiClient.get(`/tournaments/${torneoId}/clasificacion`);
+        const response = await apiClient.get(`${SERVER}/tournaments/${torneoId}/clasificacion`);
         return response.data.data; // ya viene ordenado
       } catch (error) {
         console.error("Error cargando clasificación:", error);
         return [];
       }
+    },
+
+    async getRankingTorneo(torneoId) {
+      try {
+        const response = await apiClient.get(`${SERVER}/tournaments/${torneoId}/ranking`);
+        console.log("Desde store:" + response.data);
+        return response.data.data;
+      } catch (error) {
+        console.error("Error al obtener el ranking", error);
+        return [];
+      }
+    },
+
+    async deleteJugador(jugadorId) {
+      try {
+        const response = await apiClient.delete(`${SERVER}/players/${jugadorId}`);
+        this.addMessage("Jugador eliminado correctamente", 'success')
+        return true;
+      } catch (error) {
+        this.addMessage("No se ha podido eliminar al jugador correctamente", 'error')
+        return false;
+      }
     }
-    
-
-
   }
 })

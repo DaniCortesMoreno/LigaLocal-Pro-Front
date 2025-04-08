@@ -70,6 +70,11 @@ export default {
       usuarios: [],
       clasificacion: [],
       pestañaActiva: 'equipos', // pestaña activa
+      ranking: [],
+      ordenRanking: 'goles',
+      ordenDesc: true,
+
+
     }
   },
   async mounted() {
@@ -89,7 +94,7 @@ export default {
   },
   methods: {
     ...mapActions(useUserStore, ['getTorneo', 'getUser', 'getTeamsXTorneo', 'getPartidosXTorneo',
-      'deletePartido', 'getUsersInvitadosTorneo', 'getClasificacionTorneo', 'getTeam']),
+      'deletePartido', 'getUsersInvitadosTorneo', 'getClasificacionTorneo', 'getTeam', 'getRankingTorneo']),
     async getNombreTeam(id) {
       return await this.getTeam(id).nombre;
     },
@@ -98,10 +103,37 @@ export default {
       this.clasificacion = await this.getClasificacionTorneo(this.id);
     },
 
+    async mountedRanking() {
+      this.ranking = await this.getRankingTorneo(this.id);
+      this.ordenarPor(this.ordenRanking); // orden inicial
+    },
+
+
+    ordenarPor(campo) {
+      if (this.ordenRanking === campo) {
+        this.ordenDesc = !this.ordenDesc;
+      } else {
+        this.ordenRanking = campo;
+        this.ordenDesc = true;
+      }
+
+      this.ranking.sort((a, b) => {
+        if (this.ordenDesc) {
+          return b[campo] - a[campo];
+        } else {
+          return a[campo] - b[campo];
+        }
+      });
+    },
+
+
     cambiarPestana(nombre) {
       this.pestañaActiva = nombre;
+
       if (nombre === 'clasificacion') {
         this.mountedClasificacion();
+      } else if (nombre === 'ranking') {
+        this.mountedRanking();
       }
     },
 
@@ -151,11 +183,11 @@ export default {
 
       <div class="row gy-4">
         <div class="col-md-6">
-          <i class="bi bi-flag-fill text-primary me-2"></i><strong>Tipo:</strong>
+          <i class="bi bi-flag-fill text-primary me-2"></i><strong>Tipo: </strong>
           <span class="text-muted">{{ torneo.tipo }}</span>
         </div>
         <div class="col-md-6">
-          <i class="bi bi-stopwatch-fill text-primary me-2"></i><strong>Estado:</strong>
+          <i class="bi bi-stopwatch-fill text-primary me-2"></i><strong>Estado: </strong>
           <span class="badge fs-6" :class="{
             'bg-success': torneo.estado === 'en curso',
             'bg-warning text-dark': torneo.estado === 'pendiente',
@@ -165,11 +197,11 @@ export default {
           </span>
         </div>
         <div class="col-md-6">
-          <i class="bi bi-calendar-event text-primary me-2"></i><strong>Inicio:</strong>
+          <i class="bi bi-calendar-event text-primary me-2"></i><strong>Inicio: </strong>
           <span class="text-muted">{{ torneo.fecha_inicio }}</span>
         </div>
         <div class="col-md-6">
-          <i class="bi bi-calendar-check text-primary me-2"></i><strong>Fin:</strong>
+          <i class="bi bi-calendar-check text-primary me-2"></i><strong>Fin: </strong>
           <span class="text-muted">{{ torneo.fecha_fin }}</span>
         </div>
         <!--<div class="col-md-6">
@@ -181,11 +213,11 @@ export default {
         <span class="text-muted">{{ torneo.cantidad_jugadores }}</span>
       </div>-->
         <div class="col-md-6">
-          <i class="bi bi-diagram-3-fill text-primary me-2"></i><strong>Formato:</strong>
+          <i class="bi bi-diagram-3-fill text-primary me-2"></i><strong>Formato: </strong>
           <span class="text-muted">{{ torneo.formato }}</span>
         </div>
         <div class="col-md-6">
-          <i class="bi bi-eye-fill text-primary me-2"></i><strong>Visibilidad:</strong>
+          <i class="bi bi-eye-fill text-primary me-2"></i><strong>Visibilidad: </strong>
           <span class="badge fs-6 text-dark" :class="{
             'bg-success': torneo.visibilidad?.toLowerCase() === 'público',
             'bg-secondary': torneo.visibilidad?.toLowerCase() === 'privado'
@@ -196,11 +228,11 @@ export default {
 
         </div>
         <div class="col-12">
-          <i class="bi bi-journal-text text-primary me-2"></i><strong>Reglamento:</strong>
+          <i class="bi bi-journal-text text-primary me-2"></i><strong>Reglamento: </strong>
           <p class="text-muted border-start border-3 ps-3">{{ torneo.reglamento }}</p>
         </div>
         <div class="col-12">
-          <i class="bi bi-person-fill text-primary me-2"></i><strong>Gestor del torneo:</strong>
+          <i class="bi bi-person-fill text-primary me-2"></i><strong>Gestor del torneo: </strong>
           <p class="text-muted">{{ creadorTorneo }}</p>
         </div>
       </div>
@@ -236,6 +268,13 @@ export default {
           <i class="bi bi-list-ol me-1"></i> Clasificación
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" :class="{ active: pestañaActiva === 'ranking' }" href="#"
+          @click.prevent="cambiarPestana('ranking')">
+          <i class="bi bi-bar-chart-fill me-1"></i> Ranking
+        </a>
+      </li>
+
     </ul>
   </div>
 
@@ -338,6 +377,67 @@ export default {
     </div>
   </section>
 
+  <section class="container mt-4" v-if="pestañaActiva === 'ranking'">
+    <div class="card shadow-sm rounded-4 p-4">
+      <h3 class="text-center mb-4 text-primary">
+        <i class="bi bi-bar-chart-fill me-2"></i>Ranking de Jugadores
+      </h3>
+
+      <div v-if="ranking.length === 0" class="alert alert-warning text-center">
+        Aún no hay estadísticas suficientes para mostrar el ranking.
+      </div>
+
+      <div v-else class="table-responsive">
+        <table class="table table-hover table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th>#</th>
+              <th>Jugador</th>
+              <th>Equipo</th>
+              <th @click="ordenarPor('goles')" style="cursor: pointer;">
+                Goles
+                <i
+                  :class="ordenRanking === 'goles' ? (ordenDesc ? 'bi bi-caret-down-fill' : 'bi bi-caret-up-fill') : ''"></i>
+              </th>
+
+              <th @click="ordenarPor('asistencias')" style="cursor: pointer;">
+                Asistencias
+                <i
+                  :class="ordenRanking === 'asistencias' ? (ordenDesc ? 'bi bi-caret-down-fill' : 'bi bi-caret-up-fill') : ''"></i>
+              </th>
+
+              <th @click="ordenarPor('amarillas')" style="cursor: pointer;">
+                Amarillas
+                <i
+                  :class="ordenRanking === 'amarillas' ? (ordenDesc ? 'bi bi-caret-down-fill' : 'bi bi-caret-up-fill') : ''"></i>
+              </th>
+
+              <th @click="ordenarPor('rojas')" style="cursor: pointer;">
+                Rojas
+                <i
+                  :class="ordenRanking === 'rojas' ? (ordenDesc ? 'bi bi-caret-down-fill' : 'bi bi-caret-up-fill') : ''"></i>
+              </th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(jugador, index) in ranking" :key="jugador.player_id">
+              <td>{{ index + 1 }}</td>
+              <td>{{ jugador.nombre }}</td>
+              <td>{{ jugador.equipo }}</td>
+              <td>{{ jugador.goles }}</td>
+              <td>{{ jugador.asistencias }}</td>
+              <td>{{ jugador.amarillas }}</td>
+              <td>{{ jugador.rojas }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+
+
   <section v-if="esGestorDelTorneo" class="container mt-5 mb-5">
     <div class="row g-4">
       <!-- Lista de usuarios -->
@@ -386,5 +486,4 @@ export default {
 .table tbody .primer-puesto td {
   background-color: #d4edda !important;
 }
-
 </style>

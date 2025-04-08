@@ -32,22 +32,34 @@ export default {
   computed: {
     ...mapState(useUserStore, ["user"]),
     puedeGestionar() {
-      console.log(this.equipo)
-      // Puedes extender esto si guardas el torneo en el equipo
       const esCreador = this.user && this.user.id === this.equipo.tournament?.user_id;
-      const esEditor = this.equipo.tournaments?.invited_users?.some(
+
+      const esEditor = this.equipo.tournament?.invited_users?.some(
         invitado => invitado.id === this.user.id && invitado.pivot?.role === 'editor'
       );
+
       return esCreador || esEditor;
     }
+
   },
 
   methods: {
-    ...mapActions(useUserStore, ["getEquipo", "getJugadoresPorEquipo", "deleteEquipo"]),
+    ...mapActions(useUserStore, ["getEquipo", "getJugadoresPorEquipo", "deleteEquipo", "deleteJugador"]),
 
     async cargarEquipo() {
       this.equipo = await this.getEquipo(this.id);
       this.jugadores = await this.getJugadoresPorEquipo(this.id);
+    },
+
+    async eliminarJugador(jugadorId) {
+      if (confirm("¿Estás seguro de que quieres eliminar este jugador?")) {
+        const eliminado = await this.deleteJugador(jugadorId);
+        if (eliminado) {
+          this.jugadores = this.jugadores.filter(j => j.id !== jugadorId);
+        } else {
+          alert("No se pudo eliminar el jugador.");
+        }
+      }
     },
 
     verJugador(id) {
@@ -135,9 +147,14 @@ export default {
               <div class="d-flex align-items-center gap-2">
                 <i class="bi bi-chevron-right"></i>
 
-                <button v-if="puedeGestionar" class="btn btn-sm btn-outline-secondary" @click.stop="abrirModalEdicion(jugador)"
-                   title="Editar jugador">
+                <button v-if="puedeGestionar" class="btn btn-sm btn-outline-secondary"
+                  @click.stop="abrirModalEdicion(jugador)" title="Editar jugador">
                   <i class="bi bi-pencil"></i>
+                </button>
+
+                <button v-if="puedeGestionar" class="btn btn-sm btn-outline-danger"
+                  @click.stop="eliminarJugador(jugador.id)" title="Eliminar jugador">
+                  <i class="bi bi-trash"></i>
                 </button>
               </div>
             </li>
