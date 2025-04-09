@@ -74,6 +74,12 @@ export default {
                                 <div class="fs-4 text-danger">{{ jugador.rojas || 0 }}</div>
                             </div>
                         </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="bg-light rounded p-3 shadow-sm">
+                                <strong>MVP</strong>
+                                <div class="fs-4">{{ jugador.mvp_count || 0 }}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

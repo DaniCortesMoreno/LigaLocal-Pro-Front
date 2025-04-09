@@ -305,16 +305,27 @@ export default {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="partido in partidos" :key="partido.id">
-                <td>{{ partido.equipo1?.nombre || 'Equipo 1' }}</td>
-                <td>{{ partido.goles_equipo1 }} - {{ partido.goles_equipo2 }}</td>
-                <td>{{ partido.equipo2?.nombre || 'Equipo 2' }}</td>
-                <td>{{ partido.fecha_partido }}</td>
-                <td v-if="esGestorDelTorneo">
-                  <button class="btn btn-sm btn-outline-primary me-2" @click="editarPartido(partido.id)">Editar</button>
-                  <button class="btn btn-sm btn-outline-danger" @click="eliminarPartido(partido.id)">Eliminar</button>
-                </td>
-              </tr>
+              <template v-for="partido in partidos" :key="partido.id">
+                <tr>
+                  <td>{{ partido.equipo1?.nombre || 'Equipo 1' }}</td>
+                  <td>{{ partido.goles_equipo1 }} - {{ partido.goles_equipo2 }}</td>
+                  <td>{{ partido.equipo2?.nombre || 'Equipo 2' }}</td>
+                  <td>{{ partido.fecha_partido }}</td>
+                  <td v-if="esGestorDelTorneo">
+                    <button class="btn btn-sm btn-outline-primary me-2"
+                      @click="editarPartido(partido.id)">Editar</button>
+                    <button class="btn btn-sm btn-outline-danger" @click="eliminarPartido(partido.id)">Eliminar</button>
+                  </td>
+                </tr>
+
+                <!-- MVP (dentro del mismo template v-for) -->
+                <tr v-if="partido.mvp">
+                  <td colspan="5" class="text-center text-success">
+                    <i class="bi bi-star-fill text-warning me-2"></i>
+                    MVP del Partido: <strong>{{ partido.mvp.nombre }} {{ partido.mvp.apellidos }}</strong>
+                  </td>
+                </tr>
+              </template>
             </tbody>
           </table>
         </div>
@@ -356,8 +367,9 @@ export default {
               <th>PTS</th>
             </tr>
           </thead>
-          <tbody> 
-            <tr v-for="(equipo, index) in clasificacion" :key="equipo.id"> <!--:class="{ 'primer-puesto': index == 0 }"-->
+          <tbody>
+            <tr v-for="(equipo, index) in clasificacion" :key="equipo.id">
+              <!--:class="{ 'primer-puesto': index == 0 }"-->
               <td>{{ index + 1 }}</td>
               <td>{{ equipo.nombre_equipo }}</td>
               <td>{{ equipo.jugados }}</td>

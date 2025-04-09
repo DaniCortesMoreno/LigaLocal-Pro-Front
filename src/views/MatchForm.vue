@@ -28,6 +28,7 @@ export default {
         arbitro: '',
         goles_equipo1: '',
         goles_equipo2: '',
+        mvp_id: '' // NUEVO
       },
       jugadores: [],
       estadisticas: []
@@ -54,7 +55,7 @@ export default {
       if (this.esEdicion) {
         const partido = await this.getPartido(this.id);
         this.partidoOriginal = partido;
-
+        this.initialValues.mvp_id = partido.mvp_id ?? '';
         // Cargar equipos del torneo al que pertenece el partido
         this.equipos = await this.getTeamsXTorneo(partido.torneo_id);
 
@@ -68,6 +69,8 @@ export default {
           arbitro: partido.arbitro || '',
           goles_equipo1: partido.goles_equipo1 ?? '',
           goles_equipo2: partido.goles_equipo2 ?? '',
+          mvp_id: partido.mvp_id ?? '',
+
         };
         const jugadoresEquipo1 = await this.getJugadoresPorEquipo(partido.equipo1_id);
         const jugadoresEquipo2 = await this.getJugadoresPorEquipo(partido.equipo2_id);
@@ -210,37 +213,61 @@ export default {
           <div class="row g-4">
             <!-- Equipo 1 -->
             <div class="col-12 col-lg-6">
-              <h6 class="text-primary">{{ equipos.find(e => e.id == initialValues.equipo1_id)?.nombre || 'Equipo 1' }}</h6>
+              <h6 class="text-primary">{{equipos.find(e => e.id == initialValues.equipo1_id)?.nombre || 'Equipo 1'}}
+              </h6>
 
-              <div v-for="estat in estadisticas.filter(e => jugadores.find(j => j.id === e.player_id)?.team_id == initialValues.equipo1_id)" :key="estat.player_id"
-                class="border p-3 rounded mb-3 bg-light-subtle">
-                <strong>{{ jugadores.find(j => j.id === estat.player_id)?.nombre }}</strong>
+              <div
+                v-for="estat in estadisticas.filter(e => jugadores.find(j => j.id === e.player_id)?.team_id == initialValues.equipo1_id)"
+                :key="estat.player_id" class="border p-3 rounded mb-3 bg-light-subtle">
+                <strong>{{jugadores.find(j => j.id === estat.player_id)?.nombre}} {{jugadores.find(j => j.id === estat.player_id)?.apellidos}}</strong>
                 <div class="row mt-2 g-2">
-                  <div class="col"><label>Goles</label><input type="number" v-model.number="estat.goles" min="0" class="form-control" /></div>
-                  <div class="col"><label>Asistencias</label><input type="number" v-model.number="estat.asistencias" min="0" class="form-control" /></div>
-                  <div class="col"><label>Amarillas</label><input type="number" v-model.number="estat.amarillas" min="0" class="form-control" /></div>
-                  <div class="col"><label>Rojas</label><input type="number" v-model.number="estat.rojas" min="0" class="form-control" /></div>
+                  <div class="col"><label>Goles</label><input type="number" v-model.number="estat.goles" min="0"
+                      class="form-control" /></div>
+                  <div class="col"><label>Asistencias</label><input type="number" v-model.number="estat.asistencias"
+                      min="0" class="form-control" /></div>
+                  <div class="col"><label>Amarillas</label><input type="number" v-model.number="estat.amarillas" min="0"
+                      class="form-control" /></div>
+                  <div class="col"><label>Rojas</label><input type="number" v-model.number="estat.rojas" min="0"
+                      class="form-control" /></div>
                 </div>
               </div>
             </div>
 
             <!-- Equipo 2 -->
             <div class="col-12 col-lg-6">
-              <h6 class="text-success">{{ equipos.find(e => e.id == initialValues.equipo2_id)?.nombre || 'Equipo 2' }}</h6>
+              <h6 class="text-success">{{equipos.find(e => e.id == initialValues.equipo2_id)?.nombre || 'Equipo 2'}}
+              </h6>
 
-              <div v-for="estat in estadisticas.filter(e => jugadores.find(j => j.id === e.player_id)?.team_id == initialValues.equipo2_id)" :key="estat.player_id"
-                class="border p-3 rounded mb-3 bg-light-subtle">
-                <strong>{{ jugadores.find(j => j.id === estat.player_id)?.nombre }}</strong>
+              <div
+                v-for="estat in estadisticas.filter(e => jugadores.find(j => j.id === e.player_id)?.team_id == initialValues.equipo2_id)"
+                :key="estat.player_id" class="border p-3 rounded mb-3 bg-light-subtle">
+                <strong>{{jugadores.find(j => j.id === estat.player_id)?.nombre}}</strong>
                 <div class="row mt-2 g-2">
-                  <div class="col"><label>Goles</label><input type="number" v-model.number="estat.goles" min="0" class="form-control" /></div>
-                  <div class="col"><label>Asistencias</label><input type="number" v-model.number="estat.asistencias" min="0" class="form-control" /></div>
-                  <div class="col"><label>Amarillas</label><input type="number" v-model.number="estat.amarillas" min="0" class="form-control" /></div>
-                  <div class="col"><label>Rojas</label><input type="number" v-model.number="estat.rojas" min="0" class="form-control" /></div>
+                  <div class="col"><label>Goles</label><input type="number" v-model.number="estat.goles" min="0"
+                      class="form-control" /></div>
+                  <div class="col"><label>Asistencias</label><input type="number" v-model.number="estat.asistencias"
+                      min="0" class="form-control" /></div>
+                  <div class="col"><label>Amarillas</label><input type="number" v-model.number="estat.amarillas" min="0"
+                      class="form-control" /></div>
+                  <div class="col"><label>Rojas</label><input type="number" v-model.number="estat.rojas" min="0"
+                      class="form-control" /></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <div class="mb-3" v-if="esEdicion && initialValues.estado_partido === 'finalizado'">
+          <label for="mvp_id" class="form-label">MVP del Partido</label>
+          <Field name="mvp_id" as="select" class="form-select">
+            <option disabled value="">Selecciona un jugador</option>
+            <option v-for="jugador in jugadores" :key="jugador.id" :value="jugador.id">
+              {{ jugador.nombre }} {{ jugador.apellidos }}
+            </option>
+          </Field>
+          <ErrorMessage name="mvp_id" class="text-danger small" />
+        </div>
+
 
         <!-- Botón -->
         <div class="mt-4">
