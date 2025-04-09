@@ -187,7 +187,7 @@ export default {
 
         <!-- Modal Vue puro -->
         <div v-if="mostrarModal" class="modal-backdrop-custom">
-          <div class="modal-custom">
+          <div class="modal-custom animate-modal">
             <div class="modal-header d-flex justify-content-between align-items-center">
               <h5 class="modal-title">Añadir jugador</h5>
               <button type="button" class="btn-close" @click="cerrarModal"></button>
@@ -198,6 +198,7 @@ export default {
             </div>
           </div>
         </div>
+
 
 
       </div>
@@ -212,6 +213,23 @@ export default {
 </template>
 
 <style scoped>
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-modal {
+  animation: fadeSlideIn 0.35s ease-out;
+}
+
+
 .modal-backdrop-custom {
   position: fixed;
   top: 0;
@@ -234,5 +252,6 @@ export default {
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 </style>

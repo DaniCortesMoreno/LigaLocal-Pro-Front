@@ -292,6 +292,64 @@ body[theme="custom-dark"] .btn-danger:hover {
   transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
+/* Estadísticas: fondo y texto en modo oscuro */
+body[theme="custom-dark"] .bg-light-subtle {
+  background-color: #2b2b2b !important;
+  color: #ffffff !important;
+}
+
+/* Ajuste para los bordes */
+body[theme="custom-dark"] .border {
+  border-color: #444 !important;
+}
+
+/* Fuentes visibles dentro de tarjetas de stats */
+body[theme="custom-dark"] strong,
+body[theme="custom-dark"] label {
+  color: #ffffff !important;
+}
+
+/* Inputs */
+body[theme="custom-dark"] input[type="number"] {
+  background-color: #2f2f2f;
+  color: #ffffff;
+  border-color: #555;
+}
+
+/* 🌙 Modo oscuro para modales personalizados */
+body[theme="custom-dark"] .modal-custom {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+  border-color: #333;
+}
+
+/* Inputs dentro del modal */
+body[theme="custom-dark"] .modal-custom input,
+body[theme="custom-dark"] .modal-custom select,
+body[theme="custom-dark"] .modal-custom textarea {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border-color: #444;
+}
+
+/* Botones dentro del modal */
+body[theme="custom-dark"] .modal-custom .btn {
+  background-color: #2e2e2e;
+  border-color: #555;
+  color: #ffffff;
+}
+
+body[theme="custom-dark"] .modal-custom .btn:hover {
+  background-color: #444;
+}
+
+/* Texto: etiquetas, títulos, etc. */
+body[theme="custom-dark"] .modal-custom label,
+body[theme="custom-dark"] .modal-custom strong,
+body[theme="custom-dark"] .modal-custom .modal-title {
+  color: #ffffff !important;
+}
+
 
 </style>
 
