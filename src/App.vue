@@ -350,6 +350,39 @@ body[theme="custom-dark"] .modal-custom .modal-title {
   color: #ffffff !important;
 }
 
+/* 🌙 Modo oscuro: icono del toggler visible */
+body[theme="custom-dark"] .navbar-toggler {
+  border-color: #ccc;
+}
+
+/* 🌙 Icono de hamburguesa en modo oscuro */
+body[theme="custom-dark"] .navbar-light .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.navbar-toggler {
+  border: 1px solid #888;
+  border-radius: 0.75rem;
+  padding: 0.4rem 0.6rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.navbar-toggler:hover {
+  background-color: #444;
+  border-color: #aaa;
+}
+
+/* Ajuste para modo oscuro */
+body[theme="custom-dark"] .navbar-toggler {
+  border-color: #bbb;
+  background-color: #2d2d2d;
+}
+
+body[theme="custom-dark"] .navbar-toggler:hover {
+  background-color: #3c3c3c;
+  border-color: #fff;
+}
+
 
 </style>
 

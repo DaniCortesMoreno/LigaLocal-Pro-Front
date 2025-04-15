@@ -1,26 +1,24 @@
 <template>
-  <div class="row mb-4">
-    <div class="col-md-6">
-      <input v-model="filtroBusqueda" type="text" class="form-control"
-        placeholder="Buscar por nombre, tipo o estado..." />
-    </div>
-    <div class="col-md-3">
-      <select v-model="filtroEstado" class="form-select">
-        <option value="">Todos los estados</option>
-        <option value="pendiente">Pendiente</option>
-        <option value="en curso">En curso</option>
-        <option value="finalizado">Finalizado</option>
-      </select>
-    </div>
-    <div class="col-md-3">
-      <select v-model="filtroTipo" class="form-select">
-        <option value="">Todos los tipos</option>
-        <option value="futbol11">Fútbol 11</option>
-        <option value="futbol7">Fútbol 7</option>
-        <option value="sala">Fútbol Sala</option>
-      </select>
-    </div>
+  <!-- Filtros barra compacta -->
+  <div class="filtros-bar mb-4">
+    <input v-model="filtroBusqueda" type="search" class="form-control form-control-sm"
+      placeholder="Buscar torneos..." />
+
+    <select v-model="filtroEstado" class="form-select form-select-sm">
+      <option value="">Estado</option>
+      <option value="pendiente">Pendiente</option>
+      <option value="en curso">En curso</option>
+      <option value="finalizado">Finalizado</option>
+    </select>
+
+    <select v-model="filtroTipo" class="form-select form-select-sm">
+      <option value="">Tipo</option>
+      <option value="futbol11">Fútbol 11</option>
+      <option value="futbol7">Fútbol 7</option>
+      <option value="sala">Fútbol Sala</option>
+    </select>
   </div>
+
 
   <div class="container py-5">
     <h2 class="text-center display-6 fw-bold mb-5 text-primary">
@@ -140,7 +138,8 @@ export default {
 /* Modo oscuro: estilos para input y select placeholders */
 :deep(body[theme="custom-dark"]) ::placeholder {
   color: #dddddd !important;
-  opacity: 1; /* Mejora la visibilidad en algunos navegadores */
+  opacity: 1;
+  /* Mejora la visibilidad en algunos navegadores */
 }
 
 /* Si usas selects y quieres también texto blanco en modo oscuro */
@@ -148,4 +147,26 @@ export default {
   color: #ffffff !important;
 }
 
+.filtros-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filtros-bar input,
+.filtros-bar select {
+  flex: 1 1 auto;
+  min-width: 100px;
+}
+
+@media (max-width: 576px) {
+  .filtros-bar {
+    flex-direction: column;
+  }
+
+  .filtros-bar input,
+  .filtros-bar select {
+    width: 100%;
+  }
+}
 </style>

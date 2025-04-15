@@ -152,7 +152,19 @@ const router = createRouter({
           next('/');
         }
       }
-
+    },
+    {
+      path: '/torneos/:id/editar',
+      name: 'EditarTorneo',
+      component: CreateTournamentForm,
+      props: true,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('token')) {
+          next();
+        } else {
+          next('/');
+        }
+      }
     },
     {
       path: '/about',

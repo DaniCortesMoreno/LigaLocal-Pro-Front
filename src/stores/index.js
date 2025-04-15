@@ -453,6 +453,48 @@ export const useUserStore = defineStore("data", {
         this.addMessage("No se ha podido eliminar al jugador correctamente", 'error')
         return false;
       }
+    },
+
+    async salirDelTorneo(torneoId) {
+      try {
+        await apiClient.delete(`${SERVER}/tournaments/${torneoId}/invitations/leave`);
+        // Puedes redirigir o mostrar un mensaje
+        this.addMessage("Has salido del torneo", "success");
+      } catch (error) {
+        this.addMessage("Error al salir del torneo", "error");
+      }
+    },
+    
+    async expulsarUsuario(torneoId, userId) {
+      try {
+        await apiClient.delete(`${SERVER}/tournaments/${torneoId}/invitations/${userId}`);
+        this.addMessage("Usuario expulsado correctamente", "success");
+      } catch (error) {
+        this.addMessage("Error al expulsar usuario", "error");
+      }
+    },
+
+    updateTorneo() {
+      try {
+        const response = apiClient.put(`${SERVER}/tournaments/${this.id}`, this.torneo);
+        this.addMessage("Torneo actualizado correctamente", 'success')
+        return true;
+      } catch (error) {
+        this.addMessage("No se ha podido actualizar el torneo correctamente", 'error')
+        return false;
+      }
+    },
+
+    async generarPartidosTorneo(idPartido) {
+      try {
+        const response = await apiClient.post(`${SERVER}/tournaments/${idPartido}/generar-partidos`);
+        this.addMessage("Partidos generados correctamente", 'success')
+        return true;
+      } catch (error) {
+        this.addMessage("Error al generar los partidos", 'error')
+        return false;
+      }
     }
+    
   }
 })

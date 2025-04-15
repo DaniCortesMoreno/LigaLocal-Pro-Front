@@ -1,9 +1,10 @@
 <script>
 import { mapActions, mapState } from 'pinia';
-import { useUserStore } from '../stores/index'
+import { useUserStore } from '../stores/index';
 import TeamList from '@/components/TeamList.vue';
 import router from "@/router";
 import InviteUser from '@/components/InviteUser.vue';
+import Bracket from 'vue-tournament-bracket'; // ⬅️ NUEVO
 
 export default {
   name: "TournamentView",
@@ -13,21 +14,16 @@ export default {
 
   components: {
     TeamList,
-    InviteUser
+    InviteUser,
+    Bracket // ⬅️ NUEVO
   },
 
   computed: {
-    /*esGestorDelTorneo() {
-      return this.user && this.user.id === this.torneo.user_id;
-    },*/
     ...mapState(useUserStore, ['user']),
+
     esGestorDelTorneo() {
       if (!this.user || !this.torneo) return false;
-
-      // Es el creador del torneo
       const esCreador = this.user.id == this.torneo.user_id;
-
-      // Es un invitado con rol editor
       const esEditor = this.torneo.invited_users?.some(
         invitado => invitado.id == this.user.id && invitado.pivot?.role === 'editor'
       );
@@ -35,64 +31,103 @@ export default {
     },
 
     puedeVerInvitadoEspectador() {
-
       if (!this.user || !this.torneo) return false;
-
-      // Es el creador del torneo
       const esCreador = this.user.id === this.torneo.user_id;
-
-      // Es un invitado con rol editor
       const esEditor = this.torneo.invited_users?.some(
         invitado => invitado.id === this.user.id && invitado.pivot?.role === 'editor'
       );
-
-      // Es un invitado con rol espectador
       const esEspectador = this.torneo.invited_users?.some(
         invitado => invitado.id === this.user.id && invitado.pivot?.role === 'viewer'
-      )
-
+      );
       return esCreador || esEditor || esEspectador;
+    },
+
+    mostrarBracket() {
+      return this.torneo?.formato === 'eliminacion';
+    },
+
+    mostrarClasificacion() {
+      return this.torneo?.formato === 'liguilla';
+    },
+
+    rounds() {
+      if (!this.mostrarBracket || this.partidos.length === 0) return [];
+
+      const rounds = [];
+      const partidosPorRonda = {};
+
+      for (const partido of this.partidos) {
+        const ronda = partido.ronda || 1;
+        if (!partidosPorRonda[ronda]) partidosPorRonda[ronda] = [];
+
+        partidosPorRonda[ronda].push({
+          player1: {
+            id: partido.equipo1?.id || "1",
+            name: partido.equipo1?.nombre || "Equipo 1",
+            winner: partido.goles_equipo1 > partido.goles_equipo2
+          },
+          player2: {
+            id: partido.equipo2?.id || "2",
+            name: partido.equipo2?.nombre || "Equipo 2",
+            winner: partido.goles_equipo2 > partido.goles_equipo1
+          }
+        });
+      }
+
+      const rondasOrdenadas = Object.keys(partidosPorRonda).sort((a, b) => a - b);
+      for (const r of rondasOrdenadas) {
+        rounds.push({ games: partidosPorRonda[r] });
+      }
+
+      return rounds;
     }
-
   },
-
 
   data() {
     return {
-      torneo: {
-
-      },
+      torneo: {},
       creadorTorneo: "Cargando...",
       equipos: [],
       partidos: [],
       usuarios: [],
       clasificacion: [],
-      pestañaActiva: 'equipos', // pestaña activa
+      pestañaActiva: 'equipos',
       ranking: [],
       ordenRanking: 'goles',
-      ordenDesc: true,
-
-
-    }
+      ordenDesc: true
+    };
   },
+
   async mounted() {
     this.torneo = await this.getTorneo(this.id);
-
-    if (this.torneo && this.torneo.user_id) {
+    if (this.torneo?.user_id) {
       this.creadorTorneo = await this.getCreadorTorneo();
     }
-
     this.equipos = await this.getTeamsXTorneo(this.id);
-
     this.partidos = await this.getPartidosXTorneo(this.id);
-
-    this.usuarios = await this.getUsersInvitadosTorneo(this.id)
-
-
+    this.usuarios = await this.getUsersInvitadosTorneo(this.id);
   },
+
   methods: {
-    ...mapActions(useUserStore, ['getTorneo', 'getUser', 'getTeamsXTorneo', 'getPartidosXTorneo',
-      'deletePartido', 'getUsersInvitadosTorneo', 'getClasificacionTorneo', 'getTeam', 'getRankingTorneo']),
+    ...mapActions(useUserStore, [
+      'getTorneo', 'getUser', 'getTeamsXTorneo', 'getPartidosXTorneo',
+      'deletePartido', 'getUsersInvitadosTorneo', 'getClasificacionTorneo',
+      'getTeam', 'getRankingTorneo', 'generarPartidosTorneo'
+    ]),
+
+    async generarPartidos() {
+      const confirmado = confirm("¿Deseas generar automáticamente los partidos?. Si ya lo hiciste antes, evitar repetirlo.");
+      if (!confirmado) return;
+
+      try {
+        await this.generarPartidosTorneo(this.torneo.id);
+        this.partidos = await this.getPartidosXTorneo(this.torneo.id);
+        alert("¡Partidos generados con éxito!");
+      } catch (err) {
+        alert("Hubo un error generando los partidos.");
+      }
+    },
+
     async getNombreTeam(id) {
       return await this.getTeam(id).nombre;
     },
@@ -103,55 +138,31 @@ export default {
 
     async mountedRanking() {
       this.ranking = await this.getRankingTorneo(this.id);
-      this.ordenarPor(this.ordenRanking); // orden inicial
+      this.ordenarPor(this.ordenRanking);
     },
-
 
     ordenarPor(campo) {
-      if (this.ordenRanking === campo) {
-        this.ordenDesc = !this.ordenDesc;
-      } else {
-        this.ordenRanking = campo;
-        this.ordenDesc = true;
-      }
-
-      this.ranking.sort((a, b) => {
-        if (this.ordenDesc) {
-          return b[campo] - a[campo];
-        } else {
-          return a[campo] - b[campo];
-        }
-      });
+      this.ordenRanking === campo ? this.ordenDesc = !this.ordenDesc : (this.ordenRanking = campo, this.ordenDesc = true);
+      this.ranking.sort((a, b) => this.ordenDesc ? b[campo] - a[campo] : a[campo] - b[campo]);
     },
-
 
     cambiarPestana(nombre) {
       this.pestañaActiva = nombre;
-
-      if (nombre === 'clasificacion') {
-        this.mountedClasificacion();
-      } else if (nombre === 'ranking') {
-        this.mountedRanking();
-      }
+      if (nombre === 'clasificacion') this.mountedClasificacion();
+      else if (nombre === 'ranking') this.mountedRanking();
     },
 
     async getCreadorTorneo() {
       const response = await this.getUser(this.torneo.user_id);
-      if (response && response.success) {
-        const user = response.data;
-        return `${user.nombre} ${user.apellidos}`;
-      } else {
-        return "Desconocido";
-      }
+      return response?.success ? `${response.data.nombre} ${response.data.apellidos}` : "Desconocido";
     },
 
     eliminarPartido(idPartido) {
       this.deletePartido(idPartido);
-      this.partidos = this.partidos.filter(partido => partido.id !== idPartido);
+      this.partidos = this.partidos.filter(p => p.id !== idPartido);
     },
 
     crearEquipo() {
-      // Aquí rediriges al formulario o abres modal, lo que prefieras
       this.$router.push(`/torneos/${this.id}/equipos/crear`);
     },
 
@@ -161,12 +172,9 @@ export default {
 
     verEquipo(idEquipo) {
       this.$router.push(`/equipos/${idEquipo}`);
-    },
-
-
+    }
   }
-}
-
+};
 </script>
 
 
@@ -260,10 +268,16 @@ export default {
           <i class="bi bi-calendar-event me-1"></i> Partidos
         </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="mostrarClasificacion">
         <a class="nav-link" :class="{ active: pestañaActiva === 'clasificacion' }" href="#"
           @click.prevent="cambiarPestana('clasificacion')">
           <i class="bi bi-list-ol me-1"></i> Clasificación
+        </a>
+      </li>
+      <li class="nav-item" v-if="mostrarBracket">
+        <a class="nav-link" :class="{ active: pestañaActiva === 'bracket' }" href="#"
+          @click.prevent="cambiarPestana('bracket')">
+          <i class="bi bi-diagram-2-fill me-1"></i> Eliminatorias
         </a>
       </li>
       <li class="nav-item">
@@ -335,6 +349,17 @@ export default {
             Crear nuevo partido
           </router-link>
         </div>
+
+        <div class="text-center mt-3" v-if="esGestorDelTorneo">
+          <button class="btn btn-outline-secondary btn-sm me-2" @click="generarPartidos">
+            <i class="bi bi-shuffle me-1"></i> Generar partidos
+          </button>
+
+          <router-link class="btn btn-success btn-sm" :to="`/torneos/${id}/partidos/nuevo`">
+            Crear nuevo partido
+          </router-link>
+        </div>
+
       </div>
     </div>
 
@@ -443,6 +468,19 @@ export default {
           </tbody>
         </table>
       </div>
+    </div>
+  </section>
+
+  <section class="container mt-4" v-if="pestañaActiva === 'bracket' && rounds.length > 0">
+    <div class="card shadow-sm rounded-4 p-4">
+      <h3 class="text-center mb-4 text-primary">
+        <i class="bi bi-diagram-2-fill me-2"></i>Cuadro de Eliminatorias
+      </h3>
+      <Bracket :rounds="rounds">
+        <template #player="{ player }">
+          {{ player.name }}
+        </template>
+      </Bracket>
     </div>
   </section>
 

@@ -57,8 +57,7 @@ export default {
     <div class="card shadow-sm border-0">
       <div class="card-body p-4">
         <h2 class="text-center mb-4 fw-bold text-primary">
-          <i class="bi bi-person-circle me-2"></i>Mi Perfil
-        </h2>
+          <i class="bi bi-person-circle me-2"></i>Mi Perfil</h2>
 
         <Form :validation-schema="schema" @submit="onSubmit">
           <!-- Nombre -->
