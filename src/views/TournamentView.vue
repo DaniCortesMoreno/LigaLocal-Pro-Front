@@ -60,21 +60,21 @@ export default {
         const ronda = partido.ronda || 1;
         if (!partidosPorRonda[ronda]) partidosPorRonda[ronda] = [];
 
-        partidosPorRonda[ronda].push({
-          player1: {
-            id: partido.equipo1?.id || "1",
-            name: partido.equipo1?.nombre || "Equipo 1",
-            winner: partido.goles_equipo1 > partido.goles_equipo2
-          },
-          player2: {
-            id: partido.equipo2?.id || "2",
-            name: partido.equipo2?.nombre || "Equipo 2",
-            winner: partido.goles_equipo2 > partido.goles_equipo1
-          }
-        });
+        const player1 = partido.equipo1
+          ? { id: partido.equipo1.id, name: partido.equipo1.nombre, winner: partido.goles_equipo1 > partido.goles_equipo2 }
+          : { id: "bye1", name: "Por definir", winner: false };
+
+        const player2 = partido.equipo2
+          ? { id: partido.equipo2.id, name: partido.equipo2.nombre, winner: partido.goles_equipo2 > partido.goles_equipo1 }
+          : { id: "bye2", name: "Por definir", winner: false };
+
+        partidosPorRonda[ronda].push({ player1, player2 });
       }
 
-      const rondasOrdenadas = Object.keys(partidosPorRonda).sort((a, b) => a - b);
+      const rondasOrdenadas = Object.keys(partidosPorRonda)
+        .map(r => parseInt(r))
+        .sort((a, b) => a - b);
+
       for (const r of rondasOrdenadas) {
         rounds.push({ games: partidosPorRonda[r] });
       }
@@ -122,6 +122,7 @@ export default {
       try {
         await this.generarPartidosTorneo(this.torneo.id);
         this.partidos = await this.getPartidosXTorneo(this.torneo.id);
+        console.log(this.partidos);
         alert("¡Partidos generados con éxito!");
       } catch (err) {
         alert("Hubo un error generando los partidos.");
