@@ -20,6 +20,9 @@ export default {
 
   computed: {
     ...mapState(useUserStore, ['user']),
+    esCreadorDelTorneo() {
+      return this.user && this.torneo && this.user.id === this.torneo.user_id;
+    },
 
     esGestorDelTorneo() {
       if (!this.user || !this.torneo) return false;
@@ -112,7 +115,7 @@ export default {
     ...mapActions(useUserStore, [
       'getTorneo', 'getUser', 'getTeamsXTorneo', 'getPartidosXTorneo',
       'deletePartido', 'getUsersInvitadosTorneo', 'getClasificacionTorneo',
-      'getTeam', 'getRankingTorneo', 'generarPartidosTorneo'
+      'getTeam', 'getRankingTorneo', 'generarPartidosTorneo', 'expulsarUsuario', 'salirDelTorneo'
     ]),
 
     async generarPartidos() {
@@ -173,7 +176,24 @@ export default {
 
     verEquipo(idEquipo) {
       this.$router.push(`/equipos/${idEquipo}`);
+    },
+
+    async echarUsuario(userId) {
+      const confirmado = confirm("¿Seguro que deseas expulsar a este usuario?");
+      if (!confirmado) return;
+      await this.expulsarUsuario(this.torneo.id, userId);
+      this.usuarios = await this.getUsersInvitadosTorneo(this.torneo.id);
+    },
+
+    async abandonarTorneo() {
+      const confirmado = confirm("¿Seguro que deseas salir del torneo?");
+      if (!confirmado) return;
+      await this.salirDelTorneo(this.torneo.id);
+      this.$router.push('/torneos');
     }
+
+
+
   }
 };
 </script>
@@ -495,8 +515,14 @@ export default {
           <h5 class="mb-3">Usuarios del Torneo</h5>
           <ul class="list-group">
             <li class="list-group-item">{{ creadorTorneo }} (Owner)</li>
-            <li v-for="usuario in usuarios" :key="usuario.id" class="list-group-item">
+            <li v-for="usuario in usuarios" :key="usuario.id"
+              class="list-group-item d-flex justify-content-between align-items-center">
               {{ usuario.nombre }} {{ usuario.apellidos }} ({{ usuario.role || 'Sin Definir' }})
+
+              <button v-if="esGestorDelTorneo && usuario.id !== user.id" @click="echarUsuario(usuario.id)"
+                class="btn btn-sm btn-outline-danger">
+                Expulsar
+              </button>
             </li>
           </ul>
         </div>
@@ -510,10 +536,20 @@ export default {
         </div>
       </div>
     </div>
+
+
+
+
+
   </section>
 
 
-
+  <!-- Botón de abandonar torneo -->
+  <div class="mt-4 text-center" v-if="!esCreadorDelTorneo">
+    <button @click="abandonarTorneo" class="btn btn-outline-warning">
+      <i class="bi bi-box-arrow-left me-1"></i> Abandonar torneo
+    </button>
+  </div>
 
 
 </template>

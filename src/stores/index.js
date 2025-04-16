@@ -464,7 +464,7 @@ export const useUserStore = defineStore("data", {
         this.addMessage("Error al salir del torneo", "error");
       }
     },
-    
+
     async expulsarUsuario(torneoId, userId) {
       try {
         await apiClient.delete(`${SERVER}/tournaments/${torneoId}/invitations/${userId}`);
@@ -494,7 +494,6 @@ export const useUserStore = defineStore("data", {
         this.addMessage("Error al generar los partidos", 'error')
         return false;
       }
-    }
-    
+    },
   }
 })
