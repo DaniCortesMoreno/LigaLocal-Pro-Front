@@ -127,6 +127,16 @@ export default {
             </span>
 
           </div>
+
+          <!-- Escudo del equipo sin fondo -->
+          <div class="col-12 text-center" v-if="equipo.logo">
+            <h5 class="text-muted mb-2">
+              <i class="bi bi-shield-fill text-primary me-2"></i>Escudo del equipo
+            </h5>
+            <img :src="equipo.logo" alt="Escudo del equipo" class="img-fluid" style="max-height: 180px;" />
+          </div>
+
+
         </div>
 
         <hr />
