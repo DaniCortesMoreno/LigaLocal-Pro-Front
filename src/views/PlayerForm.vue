@@ -51,10 +51,10 @@ export default {
       values.foto = this.fotoSubmit;
       if (this.jugador) {
         const ok = await this.updateJugador(this.jugador.id, values);
-        if (ok) this.$emit("jugadorCreado");
+        this.$emit("jugadorCreado");
       } else {
         const ok = await this.createJugador(values);
-        if (ok) this.$emit("jugadorCreado");
+        this.$emit("jugadorCreado");
       }
     },
 
@@ -71,8 +71,9 @@ export default {
     }
   },
   mounted() {
-    this.previewLogo = this.jugador.foto || null
+
     if (this.esEdicion) {
+      this.previewLogo = this.jugador.foto || null
       this.initialValues = {
         nombre: this.jugador.nombre,
         apellidos: this.jugador.apellidos,

@@ -83,7 +83,18 @@ export default {
       }
 
       return rounds;
+    },
+
+    puedeAbandonarTorneo() {
+      if (!this.user || !this.torneo || !this.torneo.invited_users) return false;
+
+      const estaInvitado = this.torneo.invited_users.some(
+        invitado => invitado.id === this.user.id
+      );
+
+      return !this.esCreadorDelTorneo && estaInvitado;
     }
+
   },
 
   data() {
@@ -545,7 +556,7 @@ export default {
 
 
   <!-- Botón de abandonar torneo -->
-  <div class="mt-4 text-center" v-if="!esCreadorDelTorneo">
+  <div class="mt-4 text-center" v-if="puedeAbandonarTorneo">
     <button @click="abandonarTorneo" class="btn btn-outline-warning">
       <i class="bi bi-box-arrow-left me-1"></i> Abandonar torneo
     </button>

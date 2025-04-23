@@ -203,7 +203,7 @@ export default {
               <button type="button" class="btn-close" @click="cerrarModal"></button>
             </div>
             <div class="modal-body mt-3">
-              <PlayerForm :teamId="id" :jugador="jugadorEditando" @jugadorCreado="onJugadorCreado"
+              <PlayerForm :teamId="Number(id)" :jugador="jugadorEditando" @jugadorCreado="onJugadorCreado"
                 @cancelar="cerrarModal" />
             </div>
           </div>
