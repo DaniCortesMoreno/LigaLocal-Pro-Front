@@ -52,6 +52,9 @@ export default defineComponent({
         });
       });
     },
+    getEventClass(event) {
+      return event.class; // "pendiente" o "finalizado"
+    },
 
     handleEventClick(event) {
       this.selectedEvent = event;
@@ -82,7 +85,7 @@ export default defineComponent({
     </div>
 
     <!-- Calendario -->
-    <vue-cal :events="events" locale="es" :on-event-click="handleEventClick" />
+    <vue-cal :events="events" locale="es" :on-event-click="handleEventClick" :event-class="getEventClass" />
 
     <!-- Modal -->
     <div class="modal fade" id="matchModal" tabindex="-1" aria-labelledby="matchModalLabel" aria-hidden="true">
@@ -106,7 +109,7 @@ export default defineComponent({
   </div>
 </template>
 
-<style scoped>
+<style>
 .vuecal {
   height: 75vh;
   background-color: #fff;
