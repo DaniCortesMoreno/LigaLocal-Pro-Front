@@ -494,6 +494,22 @@ export const useUserStore = defineStore("data", {
         this.addMessage("Error al generar los partidos", 'error')
         return false;
       }
+      
     },
+
+    /* ALEATORIO
+    async generarPartidosTorneo(idPartido, ida_vuelta) {
+      try {
+        const response = await apiClient.post(`${SERVER}/tournaments/${idPartido}/generar-partidos`, {
+    ida_vuelta
+  });
+        this.addMessage("Partidos generados correctamente", 'success')
+        return true;
+      } catch (error) {
+        this.addMessage("Error al generar los partidos", 'error')
+        return false;
+      }
+    },
+    */
   }
 })

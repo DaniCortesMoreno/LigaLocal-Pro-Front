@@ -5,6 +5,8 @@ import TeamList from '@/components/TeamList.vue';
 import router from "@/router";
 import InviteUser from '@/components/InviteUser.vue';
 import Bracket from 'vue-tournament-bracket'; // ⬅️ NUEVO
+import CalendarioDePartidos from '@/components/CalendarioDePartidos.vue';
+
 
 export default {
   name: "TournamentView",
@@ -15,7 +17,8 @@ export default {
   components: {
     TeamList,
     InviteUser,
-    Bracket // ⬅️ NUEVO
+    Bracket, // ⬅️ NUEVO
+    CalendarioDePartidos
   },
 
   computed: {
@@ -142,6 +145,23 @@ export default {
         alert("Hubo un error generando los partidos.");
       }
     },
+    /*ALEATORIO
+      async generarPartidos() {
+  const idaVuelta = confirm("¿Quieres que sea ida y vuelta? Pulsa 'Aceptar' para ida y vuelta, 'Cancelar' para solo ida.");
+
+  try {
+    await this.generarPartidosTorneo(this.torneo.id, idaVuelta);
+    this.partidos = await this.getPartidosXTorneo(this.torneo.id);
+    alert("¡Partidos generados con éxito!");
+  } catch (err) {
+    console.error("Error al generar partidos:", err.response?.data || err);
+    this.$store.app.setMessage({
+      type: 'error',
+      message: "Error al generar los partidos"
+    });
+  }
+}
+    */
 
     async getNombreTeam(id) {
       return await this.getTeam(id).nombre;
@@ -394,6 +414,9 @@ export default {
 
       </div>
     </div>
+
+
+    <CalendarioDePartidos :partidos="partidos" />
 
 
     <!-- Clasificacion -->
