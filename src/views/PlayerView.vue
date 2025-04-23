@@ -33,6 +33,14 @@ export default {
                     {{ jugador.nombre }} {{ jugador.apellidos }}
                 </h2>
 
+                <!-- Escudo del equipo sin fondo -->
+                <div class="col-12 text-center" v-if="jugador.foto">
+                    <h5 class="text-muted mb-2">
+                        <i class="bi bi-person-badge-fill text-primary me-2"></i>Foto del jugador
+                    </h5>
+                    <img :src="jugador.foto" alt="Foto del jugador" class="img-fluid" style="max-height: 180px;" />
+                </div>
+
                 <div class="row gy-3">
                     <div class="col-md-6">
                         <p><i class="bi bi-person-fill"></i> <strong>Dorsal:</strong> {{ jugador.dorsal || 'No asignado' }}</p>

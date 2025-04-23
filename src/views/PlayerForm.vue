@@ -15,6 +15,8 @@ export default {
   },
   data() {
     return {
+      previewLogo: null,
+      fotoSubmit: null,
       initialValues: {
         nombre: "",
         apellidos: "",
@@ -22,7 +24,8 @@ export default {
         posición: "",
         dorsal: "",
         estado: "activo",
-        team_id: this.teamId
+        team_id: this.teamId,
+        foto: null
       }
     };
   },
@@ -45,16 +48,30 @@ export default {
   methods: {
     ...mapActions(useUserStore, ["createJugador", "updateJugador"]),
     async onSubmit(values) {
-    if (this.jugador) {
-      const ok = await this.updateJugador(this.jugador.id, values);
-      if (ok) this.$emit("jugadorCreado");
-    } else {
-      const ok = await this.createJugador(values);
-      if (ok) this.$emit("jugadorCreado");
+      values.foto = this.fotoSubmit;
+      if (this.jugador) {
+        const ok = await this.updateJugador(this.jugador.id, values);
+        if (ok) this.$emit("jugadorCreado");
+      } else {
+        const ok = await this.createJugador(values);
+        if (ok) this.$emit("jugadorCreado");
+      }
+    },
+
+    handleLogoChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.previewLogo = e.target.result;
+          this.fotoSubmit = e.target.result; // Aquí se guarda el base64
+        };
+        reader.readAsDataURL(file);
+      }
     }
-  }
   },
   mounted() {
+    this.previewLogo = this.jugador.foto || null
     if (this.esEdicion) {
       this.initialValues = {
         nombre: this.jugador.nombre,
@@ -63,7 +80,8 @@ export default {
         posición: this.jugador.posición,
         dorsal: this.jugador.dorsal,
         estado: this.jugador.estado,
-        team_id: this.jugador.team_id
+        team_id: this.jugador.team_id,
+        foto: this.jugador.foto,
       };
     }
   }
@@ -71,7 +89,8 @@ export default {
 </script>
 
 <template>
-  <Form @submit="onSubmit" :validation-schema="schema" :initial-values="initialValues" :key="JSON.stringify(initialValues)">
+  <Form @submit="onSubmit" :validation-schema="schema" :initial-values="initialValues"
+    :key="JSON.stringify(initialValues)">
     <!-- campos básicos -->
     <div class="mb-3">
       <label class="form-label">Nombre</label>
@@ -107,6 +126,18 @@ export default {
       <label class="form-label">Dorsal</label>
       <Field name="dorsal" type="number" class="form-control" />
       <ErrorMessage name="dorsal" class="text-danger small" />
+    </div>
+
+    <!-- Foto -->
+    <div class="mb-3">
+      <label for="foto" class="form-label">Foto del jugador</label>
+      <input type="file" class="form-control" id="foto" accept="image/*" @change="handleLogoChange">
+    </div>
+
+    <!-- Vista previa de la foto -->
+    <div class="mb-3" v-if="previewLogo">
+      <label class="form-label">Vista previa de la foto:</label>
+      <img :src="previewLogo" alt="Foto preview" class="img-thumbnail" style="max-height: 150px;" />
     </div>
 
     <!-- solo si es edición -->
