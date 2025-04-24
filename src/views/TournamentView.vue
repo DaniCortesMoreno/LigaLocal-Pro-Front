@@ -373,10 +373,26 @@ export default {
             <tbody>
               <template v-for="partido in partidos" :key="partido.id">
                 <tr>
-                  <td>{{ partido.equipo1?.nombre || 'Equipo 1' }}</td>
+                  <td class="d-flex align-items-center">
+                    <img v-if="partido.equipo1?.logo" :src="partido.equipo1.logo" alt="Logo equipo 1"
+                      class="rounded-circle border me-2 escudo-equipo" style="width: 36px; height: 36px; object-fit: cover;" />
+                    <img v-else src="/img/logo-default.png" alt="Logo por defecto" class="rounded-circle border me-2 escudo-equipo"
+                      style="width: 36px; height: 36px; object-fit: cover;" />
+                    <span>{{ partido.equipo1?.nombre || 'Equipo 1' }}</span>
+                  </td>
+
                   <td>{{ partido.goles_equipo1 }} - {{ partido.goles_equipo2 }}</td>
-                  <td>{{ partido.equipo2?.nombre || 'Equipo 2' }}</td>
+
+                  <td class="d-flex align-items-center">
+                    <img v-if="partido.equipo2?.logo" :src="partido.equipo2.logo" alt="Logo equipo 2"
+                      class="rounded-circle border me-2 escudo-equipo" style="width: 36px; height: 36px; object-fit: cover;" />
+                    <img v-else src="/img/logo-default.png" alt="Logo por defecto" class="rounded-circle border me-2 escudo-equipo"
+                      style="width: 36px; height: 36px; object-fit: cover;" />
+                    <span>{{ partido.equipo2?.nombre || 'Equipo 2' }}</span>
+                  </td>
+
                   <td>{{ partido.fecha_partido }}</td>
+
                   <td v-if="esGestorDelTorneo">
                     <button class="btn btn-sm btn-outline-primary me-2"
                       @click="editarPartido(partido.id)">Editar</button>
@@ -384,7 +400,6 @@ export default {
                   </td>
                 </tr>
 
-                <!-- MVP (dentro del mismo template v-for) -->
                 <tr v-if="partido.mvp">
                   <td colspan="5" class="text-center text-success">
                     <i class="bi bi-star-fill text-warning me-2"></i>
@@ -392,6 +407,7 @@ export default {
                   </td>
                 </tr>
               </template>
+
             </tbody>
           </table>
         </div>
@@ -451,7 +467,13 @@ export default {
             <tr v-for="(equipo, index) in clasificacion" :key="equipo.id">
               <!--:class="{ 'primer-puesto': index == 0 }"-->
               <td>{{ index + 1 }}</td>
-              <td>{{ equipo.nombre_equipo }}</td>
+              <td class="d-flex align-items-center gap-2">
+                <img v-if="equipo.logo" :src="equipo.logo" alt="Foto Equi" class="rounded-circle border escudo-equipo"
+                  style="width: 40px; height: 40px; object-fit: cover;" />
+                <img v-else src="/img/logo-default.png" alt="Escudo por defecto" class="rounded-circle border escudo-equipo"
+                  style="width: 40px; height: 40px; object-fit: cover;" />
+                <span>{{ equipo.nombre_equipo }}</span>
+              </td>
               <td>{{ equipo.jugados }}</td>
               <td>{{ equipo.ganados }}</td>
               <td>{{ equipo.empatados }}</td>
@@ -515,9 +537,9 @@ export default {
               {{ console.log(jugador) }}
               <td>{{ index + 1 }}</td>
               <td class="d-flex align-items-center gap-2">
-                <img v-if="jugador.foto" :src="jugador.foto" alt="Foto Jug" class="rounded-circle border"
+                <img v-if="jugador.foto" :src="jugador.foto" alt="Foto Jug" class="rounded-circle border escudo-equipo"
                   style="width: 40px; height: 40px; object-fit: cover;" />
-                <img v-else src="/img/avatar-default.png" alt="Avatar por defecto" class="rounded-circle border"
+                <img v-else src="/img/avatar-default.png" alt="Avatar por defecto" class="rounded-circle border escudo-equipo"
                   style="width: 40px; height: 40px; object-fit: cover;" />
                 <span>{{ jugador.nombre }} {{ jugador.apellido }}</span>
               </td>

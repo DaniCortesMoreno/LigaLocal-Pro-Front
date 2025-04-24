@@ -47,9 +47,18 @@ export default defineComponent({
           end: new Date(new Date(partido.fecha_partido).getTime() + 90 * 60 * 1000),
           title: `${partido.equipo1?.nombre} vs ${partido.equipo2?.nombre}${resultado}`,
           content: `Estado: ${partido.estado_partido}`,
-          class: partido.estado_partido, // pendiente | finalizado
+          equipo1: {
+            nombre: partido.equipo1?.nombre,
+            logo: partido.equipo1?.logo || '/img/logo-default.png',
+          },
+          equipo2: {
+            nombre: partido.equipo2?.nombre,
+            logo: partido.equipo2?.logo || '/img/logo-default.png',
+          },
+          class: partido.estado_partido,
           id: partido.id,
         });
+
       });
     },
     getEventClass(event) {
@@ -85,7 +94,22 @@ export default defineComponent({
     </div>
 
     <!-- Calendario -->
-    <vue-cal :events="events" locale="es" :on-event-click="handleEventClick" :event-class="getEventClass" />
+    <vue-cal :events="events" locale="es" :on-event-click="handleEventClick" :event-class="getEventClass">
+      <template #event="{ event }">
+        <div class="evento-calendario d-flex align-items-center justify-content-between">
+          <div class="equipo d-flex align-items-center">
+            <img :src="event.equipo1.logo" alt="Logo 1" class="logo-equipo me-2 escudo-equipo" />
+            <span>{{ event.equipo1.nombre }}</span>
+          </div>
+          <span class="mx-1 fw-bold">vs</span>
+          <div class="equipo d-flex align-items-center">
+            <img :src="event.equipo2.logo" alt="Logo 2" class="logo-equipo me-2 escudo-equipo" />
+            <span>{{ event.equipo2.nombre }}</span>
+          </div>
+        </div>
+      </template>
+
+    </vue-cal>
 
     <!-- Modal -->
     <div class="modal fade" id="matchModal" tabindex="-1" aria-labelledby="matchModalLabel" aria-hidden="true">
@@ -155,5 +179,28 @@ export default defineComponent({
   background-color: #28a745;
   border: 1px solid #218838;
   color: #fff;
+}
+
+.logo-equipo {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+
+.evento-calendario {
+  font-size: 13px;
+  padding: 2px 4px;
+  line-height: 1.2;
+  color: white;
+  gap: 4px;
+}
+
+.vuecal__event.pendiente .evento-calendario,
+.vuecal__event.finalizado .evento-calendario {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>
