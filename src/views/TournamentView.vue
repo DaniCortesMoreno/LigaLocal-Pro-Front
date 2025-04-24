@@ -512,8 +512,13 @@ export default {
           </thead>
           <tbody>
             <tr v-for="(jugador, index) in ranking" :key="jugador.player_id">
+              {{ console.log(jugador) }}
               <td>{{ index + 1 }}</td>
-              <td>{{ jugador.nombre }}</td>
+              <td class="d-flex align-items-center gap-2">
+                <img :src="jugador.foto" alt="Foto Jug" class="rounded-circle border"
+                  style="width: 40px; height: 40px; object-fit: cover;" />
+                <span>{{ jugador.nombre }} {{ jugador.apellido }}</span>
+              </td>
               <td>{{ jugador.equipo }}</td>
               <td>{{ jugador.goles }}</td>
               <td>{{ jugador.asistencias }}</td>
