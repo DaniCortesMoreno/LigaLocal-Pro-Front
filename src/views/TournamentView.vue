@@ -515,10 +515,13 @@ export default {
               {{ console.log(jugador) }}
               <td>{{ index + 1 }}</td>
               <td class="d-flex align-items-center gap-2">
-                <img :src="jugador.foto" alt="Foto Jug" class="rounded-circle border"
+                <img v-if="jugador.foto" :src="jugador.foto" alt="Foto Jug" class="rounded-circle border"
+                  style="width: 40px; height: 40px; object-fit: cover;" />
+                <img v-else src="/img/avatar-default.png" alt="Avatar por defecto" class="rounded-circle border"
                   style="width: 40px; height: 40px; object-fit: cover;" />
                 <span>{{ jugador.nombre }} {{ jugador.apellido }}</span>
               </td>
+
               <td>{{ jugador.equipo }}</td>
               <td>{{ jugador.goles }}</td>
               <td>{{ jugador.asistencias }}</td>
