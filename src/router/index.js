@@ -12,6 +12,7 @@ import TeamView from '@/views/TeamView.vue'
 import PlayerView from '@/views/PlayerView.vue'
 import MatchForm from '@/views/MatchForm.vue'
 import MyTournamentsInvited from '@/views/MyTournamentsInvited.vue'
+import MatchGameView from '@/views/MatchGameView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -165,6 +166,12 @@ const router = createRouter({
           next('/');
         }
       }
+    },
+    {
+      path: '/partidos/:id',
+      name: 'Partido',
+      component: MatchGameView,
+      props: true
     },
     {
       path: '/about',

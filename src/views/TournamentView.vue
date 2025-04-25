@@ -234,6 +234,10 @@ export default {
           this.enlaceCopiado = false;
         }, 3000);
       });
+    },
+
+    verPartido(id) {
+      this.$router.push(`/partidos/${id}`)
     }
 
 
@@ -427,7 +431,7 @@ export default {
             </thead>
             <tbody>
               <template v-for="partido in partidos" :key="partido.id">
-                <tr>
+                <tr @click="verPartido(partido.id)">
                   <td class="d-flex align-items-center">
                     <img v-if="partido.equipo1?.logo" :src="partido.equipo1.logo" alt="Logo equipo 1"
                       class="rounded-circle border me-2 escudo-equipo"
@@ -466,6 +470,7 @@ export default {
                   </td>
                 </tr>
               </template>
+
 
             </tbody>
           </table>

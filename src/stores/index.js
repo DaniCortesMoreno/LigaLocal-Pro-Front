@@ -494,7 +494,7 @@ export const useUserStore = defineStore("data", {
         this.addMessage("Error al generar los partidos", 'error')
         return false;
       }
-      
+
     },
 
     /* ALEATORIO
@@ -511,5 +511,25 @@ export const useUserStore = defineStore("data", {
       }
     },
     */
+
+    async cargarComentarios(matchId) {
+      try {
+        const response = await apiClient.get(`${SERVER}/partidos/${matchId}/comentarios`);
+        return response.data.data.data
+      } catch (error) {
+        console.log(error);
+        return [];
+      }
+    },
+    async enviarComentario(matchId, contenido) {
+      try {
+        const res = await apiClient.post(`${SERVER}/partidos/${matchId}/comentarios`, {
+          contenido
+        });
+        return res.data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
   }
 })
