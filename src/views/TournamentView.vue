@@ -26,6 +26,9 @@ export default {
     esCreadorDelTorneo() {
       return this.user && this.torneo && this.user.id === this.torneo.user_id;
     },
+    window() {
+      return window;
+    },
 
     esGestorDelTorneo() {
       if (!this.user || !this.torneo) return false;
@@ -111,7 +114,8 @@ export default {
       pestañaActiva: 'equipos',
       ranking: [],
       ordenRanking: 'goles',
-      ordenDesc: true
+      ordenDesc: true,
+      enlaceCopiado: false // 👈
     };
   },
 
@@ -221,6 +225,15 @@ export default {
       if (!confirmado) return;
       await this.salirDelTorneo(this.torneo.id);
       this.$router.push('/torneos');
+    },
+    copiarEnlace() {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        this.enlaceCopiado = true;
+        setTimeout(() => {
+          this.enlaceCopiado = false;
+        }, 3000);
+      });
     }
 
 
@@ -238,6 +251,48 @@ export default {
       <h2 class="text-center text-primary display-4 fw-bold mb-5">
         <i class="bi bi-trophy-fill me-2"></i> {{ torneo.nombre }}
       </h2>
+
+      <!-- Botón para abrir el modal de compartir -->
+      <div v-if="esGestorDelTorneo" class="text-center mb-4">
+        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalCompartir">
+          <i class="bi bi-share-fill me-1"></i> Compartir torneo
+        </button>
+      </div>
+
+      <!-- Modal de compartir -->
+      <div class="modal fade" id="modalCompartir" tabindex="-1" aria-labelledby="modalCompartirLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content text-center p-4">
+            <h5 class="modal-title mb-3" id="modalCompartirLabel">Compartir torneo</h5>
+            <p class="text-muted">Elige una opción para compartir este torneo:</p>
+
+            <div class="d-flex justify-content-around mb-3">
+              <a :href="`https://wa.me/?text=${encodeURIComponent(window.location.href)}`" target="_blank"
+                class="btn btn-success">
+                <i class="bi bi-whatsapp me-1"></i> WhatsApp
+              </a>
+
+              <a :href="`https://twitter.com/intent/tweet?text=${encodeURIComponent('¡Mira este torneo! ' + window.location.href)}`"
+                target="_blank" class="btn btn-primary">
+                <i class="bi bi-twitter me-1"></i> Twitter
+              </a>
+
+              <button class="btn btn-outline-secondary" @click="copiarEnlace">
+                <i class="bi bi-clipboard me-1"></i> Copiar
+              </button>
+            </div>
+
+            <div v-if="enlaceCopiado" class="text-success fw-semibold">
+              <i class="bi bi-check-circle me-1"></i> ¡Enlace copiado!
+            </div>
+
+            <div class="mt-3">
+              <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="row gy-4">
         <div class="col-md-6">
@@ -290,7 +345,7 @@ export default {
           <p class="text-muted border-start border-3 ps-3">{{ torneo.reglamento }}</p>
         </div>
         <div class="col-12">
-          <i class="bi bi-person-fill text-primary me-2"></i><strong>Gestor del torneo: </strong>
+          <i class="bi bi-person-fill text-primary me-2"></i><strong>Creador del torneo: </strong>
           <p class="text-muted">{{ creadorTorneo }}</p>
         </div>
       </div>
@@ -375,8 +430,10 @@ export default {
                 <tr>
                   <td class="d-flex align-items-center">
                     <img v-if="partido.equipo1?.logo" :src="partido.equipo1.logo" alt="Logo equipo 1"
-                      class="rounded-circle border me-2 escudo-equipo" style="width: 36px; height: 36px; object-fit: cover;" />
-                    <img v-else src="/img/logo-default.png" alt="Logo por defecto" class="rounded-circle border me-2 escudo-equipo"
+                      class="rounded-circle border me-2 escudo-equipo"
+                      style="width: 36px; height: 36px; object-fit: cover;" />
+                    <img v-else src="/img/logo-default.png" alt="Logo por defecto"
+                      class="rounded-circle border me-2 escudo-equipo"
                       style="width: 36px; height: 36px; object-fit: cover;" />
                     <span>{{ partido.equipo1?.nombre || 'Equipo 1' }}</span>
                   </td>
@@ -385,8 +442,10 @@ export default {
 
                   <td class="d-flex align-items-center">
                     <img v-if="partido.equipo2?.logo" :src="partido.equipo2.logo" alt="Logo equipo 2"
-                      class="rounded-circle border me-2 escudo-equipo" style="width: 36px; height: 36px; object-fit: cover;" />
-                    <img v-else src="/img/logo-default.png" alt="Logo por defecto" class="rounded-circle border me-2 escudo-equipo"
+                      class="rounded-circle border me-2 escudo-equipo"
+                      style="width: 36px; height: 36px; object-fit: cover;" />
+                    <img v-else src="/img/logo-default.png" alt="Logo por defecto"
+                      class="rounded-circle border me-2 escudo-equipo"
                       style="width: 36px; height: 36px; object-fit: cover;" />
                     <span>{{ partido.equipo2?.nombre || 'Equipo 2' }}</span>
                   </td>
@@ -470,8 +529,8 @@ export default {
               <td class="d-flex align-items-center gap-2">
                 <img v-if="equipo.logo" :src="equipo.logo" alt="Foto Equi" class="rounded-circle border escudo-equipo"
                   style="width: 40px; height: 40px; object-fit: cover;" />
-                <img v-else src="/img/logo-default.png" alt="Escudo por defecto" class="rounded-circle border escudo-equipo"
-                  style="width: 40px; height: 40px; object-fit: cover;" />
+                <img v-else src="/img/logo-default.png" alt="Escudo por defecto"
+                  class="rounded-circle border escudo-equipo" style="width: 40px; height: 40px; object-fit: cover;" />
                 <span>{{ equipo.nombre_equipo }}</span>
               </td>
               <td>{{ equipo.jugados }}</td>
@@ -539,8 +598,8 @@ export default {
               <td class="d-flex align-items-center gap-2">
                 <img v-if="jugador.foto" :src="jugador.foto" alt="Foto Jug" class="rounded-circle border escudo-equipo"
                   style="width: 40px; height: 40px; object-fit: cover;" />
-                <img v-else src="/img/avatar-default.png" alt="Avatar por defecto" class="rounded-circle border escudo-equipo"
-                  style="width: 40px; height: 40px; object-fit: cover;" />
+                <img v-else src="/img/avatar-default.png" alt="Avatar por defecto"
+                  class="rounded-circle border escudo-equipo" style="width: 40px; height: 40px; object-fit: cover;" />
                 <span>{{ jugador.nombre }} {{ jugador.apellido }}</span>
               </td>
 
@@ -615,7 +674,6 @@ export default {
     </button>
   </div>
 
-
 </template>
 
 <style scoped>
@@ -634,5 +692,23 @@ export default {
 
 .table tbody .primer-puesto td {
   background-color: #d4edda !important;
+}
+
+.btn-outline-primary {
+  transition: all 0.2s ease;
+}
+
+.btn-outline-primary:hover {
+  transform: scale(1.03);
+}
+
+.modal-content {
+  border-radius: 16px;
+  background-color: #fff;
+}
+
+.modal-title {
+  font-weight: 600;
+  color: #0d6efd;
 }
 </style>
