@@ -531,5 +531,15 @@ export const useUserStore = defineStore("data", {
         console.log(e);
       }
     },
+
+    async borrarComentario(comentarioId) {
+      try {
+        const res = await apiClient.delete(`${SERVER}/comentarios/${comentarioId}`);
+        return res.data;
+      } catch (e) {
+        console.log(e);
+      }
+    }
   }
+
 })

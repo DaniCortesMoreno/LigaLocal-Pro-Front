@@ -1,6 +1,6 @@
 <script>
 import { useUserStore } from '@/stores';
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
 
 export default {
   name: 'PartidoView',
@@ -15,7 +15,11 @@ export default {
       enviando: false,
       paginaComentarios: 1,
       hayMasComentarios: true,
+      torneo: null,
     };
+  },
+  computed: {
+    ...mapState(useUserStore, ['user']),
   },
   async mounted() {
     await this.cargarPartido();
@@ -32,9 +36,13 @@ export default {
     this.comentarios = comentarios;
   },
   methods: {
-    ...mapActions(useUserStore, ['cargarComentarios', 'enviarComentario', 'getPartido', 'getUser']),
+    ...mapActions(useUserStore, ['cargarComentarios', 'enviarComentario', 'getPartido', 'getUser', 'borrarComentario'
+      , 'getTorneo'
+    ]),
     async cargarPartido() {
       this.partido = await this.getPartido(this.id);
+      this.torneo = await this.getTorneo(this.partido.torneo_id);
+
     },
     async mandarComentario() {
       if (!this.nuevoComentario.trim()) return;
@@ -84,6 +92,13 @@ export default {
         comentario.nombre_usuario = `${usuario.data.nombre} ${usuario.data.apellidos}`;
         comentario.foto_usuario = usuario.data.foto;
         this.comentarios.push(comentario);
+      }
+    },
+
+    async eliminarComentario(comentarioId) {
+      if (confirm('¿Seguro que deseas eliminar este comentario?')) {
+        await this.borrarComentario(comentarioId);
+        this.comentarios = this.comentarios.filter(comentario => comentario.id !== comentarioId);
       }
     }
   },
@@ -136,6 +151,10 @@ export default {
           <strong>{{ comentario.nombre_usuario || 'Usuario' }}:</strong>{{
             comentario.contenido }}
           <div class="text-muted small">{{ comentario.created_at }}</div>
+
+          <button v-if="this.user.id == this.torneo.user_id" @click="eliminarComentario(comentario.id)" class="btn btn-sm btn-outline-danger text-danger">
+            <i class="bi bi-trash"></i>
+          </button>
         </li>
 
         <div class="text-center mt-3" v-if="hayMasComentarios">
