@@ -133,8 +133,26 @@ export default {
     ...mapActions(useUserStore, [
       'getTorneo', 'getUser', 'getTeamsXTorneo', 'getPartidosXTorneo',
       'deletePartido', 'getUsersInvitadosTorneo', 'getClasificacionTorneo',
-      'getTeam', 'getRankingTorneo', 'generarPartidosTorneo', 'expulsarUsuario', 'salirDelTorneo'
+      'getTeam', 'getRankingTorneo', 'generarPartidosTorneo', 'expulsarUsuario', 'salirDelTorneo',
+      'descargarPartidos'
     ]),
+
+    async descargarPartidosPDF() {
+      try {
+        const blob = await this.descargarPartidos(this.torneo.id);
+
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `partidos_${this.torneo.id}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (error) {
+        console.error('Error descargando PDF:', error);
+      }
+    },
 
     async generarPartidos() {
       const confirmado = confirm("¿Deseas generar automáticamente los partidos?. Si ya lo hiciste antes, evitar repetirlo.");
@@ -143,7 +161,6 @@ export default {
       try {
         await this.generarPartidosTorneo(this.torneo.id);
         this.partidos = await this.getPartidosXTorneo(this.torneo.id);
-        console.log(this.partidos);
         alert("¡Partidos generados con éxito!");
       } catch (err) {
         alert("Hubo un error generando los partidos.");
@@ -492,6 +509,12 @@ export default {
           </router-link>
         </div>
 
+        <div class="text-center mt-3" v-if="esGestorDelTorneo">
+          <button class="btn btn-outline-primary" @click="descargarPartidosPDF">
+            Descargar partidos en PDF
+          </button>
+        </div>
+
       </div>
     </div>
 
@@ -598,7 +621,6 @@ export default {
           </thead>
           <tbody>
             <tr v-for="(jugador, index) in ranking" :key="jugador.player_id">
-              {{ console.log(jugador) }}
               <td>{{ index + 1 }}</td>
               <td class="d-flex align-items-center gap-2">
                 <img v-if="jugador.foto" :src="jugador.foto" alt="Foto Jug" class="rounded-circle border escudo-equipo"

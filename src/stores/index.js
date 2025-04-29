@@ -539,7 +539,22 @@ export const useUserStore = defineStore("data", {
       } catch (e) {
         console.log(e);
       }
-    }
+    },
+    async descargarPartidos(torneoId) {
+      try {
+        const response = await apiClient.get(`${SERVER}/tournaments/${torneoId}/descargar-partidos`, {
+          responseType: 'blob', // ⚡ esto es importante para recibirlo como archivo
+          headers: {
+            Accept: 'application/pdf',
+          },
+        });
+        return response.data;
+      } catch (e) {
+        console.error('Error descargando PDF:', e);
+        throw e; // por si quieres capturarlo en el componente
+      }
+    },
+
   }
 
 })

@@ -106,70 +106,139 @@ export default {
 </script>
 <template>
   <div class="container py-5" v-if="partido">
-    <div class="card shadow-sm p-4 rounded-4">
-      <h2 class="text-center text-primary mb-4">Detalles del Partido</h2>
-
-      <div class="text-center mb-4">
-        <img :src="partido.equipo1?.logo || '/img/logo-default.png'" alt="Logo equipo 1"
-          class="rounded-circle border me-2" style="width: 50px; height: 50px; object-fit: cover;" />
-        <strong class="me-2">{{ partido.equipo1?.nombre || 'Equipo 1' }}</strong>
-
-        <span class="fs-4 mx-3">{{ partido.goles_equipo1 }} - {{ partido.goles_equipo2 }}</span>
-
-        <strong class="ms-2">{{ partido.equipo2?.nombre || 'Equipo 2' }}</strong>
-        <img :src="partido.equipo2?.logo || '/img/logo-default.png'" alt="Logo equipo 2"
-          class="rounded-circle border ms-2" style="width: 50px; height: 50px; object-fit: cover;" />
+    <div class="mb-4 text-center" v-if="torneo">
+      <h3 class="text-primary mb-1">
+        <router-link :to="`/torneos/${torneo.id}`" class="text-decoration-none text-primary">
+          {{ torneo.nombre }}
+        </router-link>
+      </h3>
+      <div class="text-muted small">
+        <i class="bi bi-trophy me-1"></i> Tipo: {{ torneo.formato.toUpperCase() }} |
+        <i class="bi bi-eye me-1"></i> Visibilidad: {{ torneo.visibilidad }}
       </div>
+    </div>
 
-      <p class="text-center text-muted">
-        <i class="bi bi-calendar-event me-1"></i> {{ partido.fecha_partido }}
-      </p>
+    <div class="card shadow-sm p-4 rounded-4">
+      <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-4">
+        <div class="text-center mb-3 mb-md-0">
+          <img :src="partido.equipo1?.logo || '/img/logo-default.png'" class="rounded-circle border mb-2"
+            style="width: 80px; height: 80px; object-fit: cover;" alt="Logo equipo 1" />
+          <h5 class="mb-0">{{ partido.equipo1?.nombre || 'Equipo 1' }}</h5>
+        </div>
+
+        <div class="text-center">
+          <div class="fs-1 fw-bold">{{ partido.goles_equipo1 }} - {{ partido.goles_equipo2 }}</div>
+          <div class="text-muted">{{ formatFecha(partido.fecha_partido) }}</div>
+          <div v-if="partido.arbitro" class="text-muted small mt-1">
+            <i class="bi bi-whistle me-1"></i> Árbitro: {{ partido.arbitro }}
+          </div>
+        </div>
+
+        <div class="text-center mt-3 mt-md-0">
+          <img :src="partido.equipo2?.logo || '/img/logo-default.png'" class="rounded-circle border mb-2"
+            style="width: 80px; height: 80px; object-fit: cover;" alt="Logo equipo 2" />
+          <h5 class="mb-0">{{ partido.equipo2?.nombre || 'Equipo 2' }}</h5>
+        </div>
+      </div>
 
       <div v-if="partido.mvp" class="alert alert-success text-center mt-4">
         <i class="bi bi-star-fill text-warning me-2"></i>
-        MVP: <strong>{{ partido.mvp.nombre }} {{ partido.mvp.apellidos }}</strong>
+        MVP del partido: <strong>{{ partido.mvp.nombre }} {{ partido.mvp.apellidos }}</strong>
       </div>
+
+      <div class="mt-2">
+        <span class="badge px-3 py-2 fs-6" :class="{
+          'bg-secondary': partido.estado_partido === 'pendiente',
+          'bg-info text-dark': partido.estado_partido === 'en juego',
+          'bg-success': partido.estado_partido === 'finalizado',
+          'bg-warning text-dark': partido.estado_partido === 'aplazado'
+        }">
+          {{ partido.estado_partido.toUpperCase() }}
+        </span>
+      </div>
+
 
       <hr />
 
-      <h4 class="mb-3">Comentarios</h4>
+      <!-- Sección de comentarios -->
+      <div>
+        <h4 class="mb-3">Comentarios</h4>
 
-      <div class="mb-3">
-        <textarea v-model="nuevoComentario" class="form-control" rows="3" placeholder="Escribe un comentario..."
-          :disabled="enviando"></textarea>
-        <button class="btn btn-primary mt-2" @click="mandarComentario" :disabled="enviando || !nuevoComentario">
-          Comentar
-        </button>
-      </div>
-
-      <div v-if="comentarios.length === 0" class="text-muted">No hay comentarios todavía.</div>
-
-      <ul class="list-group">
-        <li class="list-group-item" v-for="comentario in comentarios" :key="comentario.id">
-          <img :src="comentario.foto_usuario || '/img/avatar-default.png'" alt="Avatar"
-            class="rounded-circle border me-2" style="width: 40px; height: 40px; object-fit: cover;" />
-          <strong>{{ comentario.nombre_usuario || 'Usuario' }}:</strong>{{
-            comentario.contenido }}
-          <div class="text-muted small">{{ comentario.created_at }}</div>
-
-          <button v-if="this.user.id == this.torneo.user_id" @click="eliminarComentario(comentario.id)" class="btn btn-sm btn-outline-danger text-danger">
-            <i class="bi bi-trash"></i>
+        <div class="mb-3">
+          <textarea v-model="nuevoComentario" class="form-control" rows="3" placeholder="Escribe un comentario..."
+            :disabled="enviando"></textarea>
+          <button class="btn btn-primary mt-2" @click="mandarComentario" :disabled="enviando || !nuevoComentario">
+            Comentar
           </button>
-        </li>
+        </div>
 
-        <div class="text-center mt-3" v-if="hayMasComentarios">
+        <div v-if="comentarios.length === 0" class="text-muted text-center">
+          No hay comentarios todavía.
+        </div>
+
+        <ul class="list-group mb-3">
+          <li class="list-group-item d-flex align-items-start justify-content-between" v-for="comentario in comentarios"
+            :key="comentario.id">
+            <div class="d-flex align-items-center">
+              <img :src="comentario.foto_usuario || '/img/avatar-default.png'" class="rounded-circle border me-2"
+                style="width: 40px; height: 40px; object-fit: cover;" alt="Avatar" />
+              <div>
+                <strong>{{ comentario.nombre_usuario || 'Usuario' }}</strong>
+                <p class="mb-1">{{ comentario.contenido }}</p>
+                <small class="text-muted">{{ formatFecha(comentario.created_at) }}</small>
+              </div>
+            </div>
+            <div>
+              <button v-if="comentario.puede_borrar" @click="eliminarComentario(comentario.id)"
+                class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </li>
+        </ul>
+
+        <div class="text-center" v-if="hayMasComentarios">
           <button class="btn btn-outline-secondary" @click="verMasComentarios">
             Ver más comentarios
           </button>
         </div>
-      </ul>
+      </div>
     </div>
+
   </div>
 </template>
 
 <style scoped>
 .card {
-  max-width: 800px;
+  max-width: 900px;
   margin: auto;
+}
+
+img {
+  background-color: #fff;
+}
+
+.list-group-item {
+  background-color: #f8f9fa;
+  border: none;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.list-group-item:last-child {
+  border-bottom: none;
+}
+
+.card {
+  max-width: 900px;
+  margin: auto;
+}
+
+a {
+  transition: 0.2s;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #0d6efd;
 }
 </style>
