@@ -60,6 +60,12 @@ export default {
                     <div class="row justify-content-center">
                         <div class="col-md-3 col-6 mb-3">
                             <div class="bg-light rounded p-3 shadow-sm">
+                                <strong>Partidos Jugados</strong>
+                                <div class="fs-4 text">{{ jugador.partidos_jugados || 0 }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="bg-light rounded p-3 shadow-sm">
                                 <strong>Goles</strong>
                                 <div class="fs-4 text-success">{{ jugador.goles || 0 }}</div>
                             </div>

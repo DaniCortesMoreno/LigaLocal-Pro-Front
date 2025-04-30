@@ -448,7 +448,8 @@ export default {
             </thead>
             <tbody>
               <template v-for="partido in partidos" :key="partido.id">
-                <tr @click="verPartido(partido.id)">
+                <!--@click.stop equivale a @click="$event.stopPropagation()"-->
+                <tr @click.stop="verPartido(partido.id)">
                   <td class="d-flex align-items-center">
                     <img v-if="partido.equipo1?.logo" :src="partido.equipo1.logo" alt="Logo equipo 1"
                       class="rounded-circle border me-2 escudo-equipo"
@@ -475,8 +476,8 @@ export default {
 
                   <td v-if="esGestorDelTorneo">
                     <button class="btn btn-sm btn-outline-primary me-2"
-                      @click="editarPartido(partido.id)">Editar</button>
-                    <button class="btn btn-sm btn-outline-danger" @click="eliminarPartido(partido.id)">Eliminar</button>
+                      @click.stop="editarPartido(partido.id)">Editar</button>
+                    <button class="btn btn-sm btn-outline-danger" @click.stop="eliminarPartido(partido.id)">Eliminar</button>
                   </td>
                 </tr>
 

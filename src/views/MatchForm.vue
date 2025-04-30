@@ -82,6 +82,7 @@ export default {
           const previa = statsGuardadas.find(e => e.id === jugador.id);
           return {
             player_id: jugador.id,
+            partidos_jugados: previa?.pivot?.partidos_jugados ?? 0,
             goles: previa?.pivot?.goles ?? 0,
             asistencias: previa?.pivot?.asistencias ?? 0,
             amarillas: previa?.pivot?.amarillas ?? 0,
@@ -98,6 +99,7 @@ export default {
       const payload = {
         ...values,
         fecha_partido: fechaCompleta,
+
       };
 
       if (!this.esEdicion) payload.estado_partido = 'pendiente';
@@ -105,7 +107,13 @@ export default {
       if (this.esEdicion) {
         const ok = await this.updatePartido(this.id, payload);
         if (ok) {
-          const statsValidas = this.estadisticas.filter(e => e.player_id !== undefined && e.player_id !== null);
+          const statsValidas = this.estadisticas
+            .filter(e => e.player_id !== undefined && e.player_id !== null)
+            .map(e => ({
+              ...e,
+              partidos_jugados: e.partidos_jugados ? 1 : 0, // ✅ conversión aquí
+            }));
+
           console.log('Enviando estadísticas:', JSON.stringify(statsValidas));
           await this.registrarEstadisticas(this.id, statsValidas);
           this.$router.push(`/torneos/${this.partidoOriginal.torneo_id}`);
@@ -219,8 +227,13 @@ export default {
               <div
                 v-for="estat in estadisticas.filter(e => jugadores.find(j => j.id === e.player_id)?.team_id == initialValues.equipo1_id)"
                 :key="estat.player_id" class="border p-3 rounded mb-3 bg-light-subtle">
-                <strong>{{jugadores.find(j => j.id === estat.player_id)?.nombre}} {{jugadores.find(j => j.id === estat.player_id)?.apellidos}}</strong>
+                <strong>{{jugadores.find(j => j.id === estat.player_id)?.nombre}} {{jugadores.find(j => j.id ===
+                  estat.player_id)?.apellidos}}</strong>
                 <div class="row mt-2 g-2">
+                  <div class="col">
+                    <label class="form-check-label d-block">Jugó</label>
+                    <input type="checkbox" v-model="estat.partidos_jugados" class="form-check-input" />
+                  </div>
                   <div class="col"><label>Goles</label><input type="number" v-model.number="estat.goles" min="0"
                       class="form-control" /></div>
                   <div class="col"><label>Asistencias</label><input type="number" v-model.number="estat.asistencias"
@@ -243,6 +256,10 @@ export default {
                 :key="estat.player_id" class="border p-3 rounded mb-3 bg-light-subtle">
                 <strong>{{jugadores.find(j => j.id === estat.player_id)?.nombre}}</strong>
                 <div class="row mt-2 g-2">
+                  <div class="col">
+                    <label class="form-check-label d-block">Jugó</label>
+                    <input type="checkbox" v-model="estat.partidos_jugados" class="form-check-input" />
+                  </div>
                   <div class="col"><label>Goles</label><input type="number" v-model.number="estat.goles" min="0"
                       class="form-control" /></div>
                   <div class="col"><label>Asistencias</label><input type="number" v-model.number="estat.asistencias"
