@@ -48,7 +48,7 @@ export default {
     ...mapActions(useUserStore, ["addEquipo", "getEquipo", "updateEquipo"]),
 
     async onSubmit(values) {
-      values.logo = this.equipo.logo; // 💥 Aquí está la clave
+      values.logo = this.equipo.logo;
       console.log("Enviando equipo con logo:", values.logo);
 
       if (this.equipo_id) {

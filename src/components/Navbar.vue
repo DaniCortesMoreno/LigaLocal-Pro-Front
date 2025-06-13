@@ -69,7 +69,7 @@ const toggleMenu = () => {
         </button>
 
 
-        <!-- 2️⃣ Toggle después -->
+        <!-- Toggle después -->
         <button class="btn btn-outline-secondary btn-sm" @click="toggleDark()" title="Cambiar tema">
           <i :class="isDark ? 'bi bi-moon-fill' : 'bi bi-sun-fill'"></i>
         </button>

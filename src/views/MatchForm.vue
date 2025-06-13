@@ -111,7 +111,7 @@ export default {
             .filter(e => e.player_id !== undefined && e.player_id !== null)
             .map(e => ({
               ...e,
-              partidos_jugados: e.partidos_jugados ? 1 : 0, // ✅ conversión aquí
+              partidos_jugados: e.partidos_jugados ? 1 : 0, //conversión aquí
             }));
 
           console.log('Enviando estadísticas:', JSON.stringify(statsValidas));

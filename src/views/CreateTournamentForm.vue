@@ -95,7 +95,7 @@ export default {
               <option value="" disabled selected>Seleccione una opción</option>
               <option value="liguilla">Liguilla</option>
               <option value="eliminacion">Eliminación directa</option>
-              <option value="grupos_playoffs">Grupos + Playoffs</option>
+              <!--<option value="grupos_playoffs">Grupos + Playoffs</option>-->
             </Field>
             <ErrorMessage name="formato" class="text-danger small" />
           </div>

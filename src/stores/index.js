@@ -543,7 +543,7 @@ export const useUserStore = defineStore("data", {
     async descargarPartidos(torneoId) {
       try {
         const response = await apiClient.get(`${SERVER}/tournaments/${torneoId}/descargar-partidos`, {
-          responseType: 'blob', // ⚡ esto es importante para recibirlo como archivo
+          responseType: 'blob',
           headers: {
             Accept: 'application/pdf',
           },

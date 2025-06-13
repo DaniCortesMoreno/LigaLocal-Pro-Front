@@ -4,7 +4,7 @@ import { useUserStore } from '../stores/index';
 import TeamList from '@/components/TeamList.vue';
 import router from "@/router";
 import InviteUser from '@/components/InviteUser.vue';
-import Bracket from 'vue-tournament-bracket'; // ⬅️ NUEVO
+import Bracket from 'vue-tournament-bracket';
 import CalendarioDePartidos from '@/components/CalendarioDePartidos.vue';
 
 
@@ -17,7 +17,7 @@ export default {
   components: {
     TeamList,
     InviteUser,
-    Bracket, // ⬅️ NUEVO
+    Bracket, 
     CalendarioDePartidos
   },
 
@@ -115,7 +115,7 @@ export default {
       ranking: [],
       ordenRanking: 'goles',
       ordenDesc: true,
-      enlaceCopiado: false // 👈
+      enlaceCopiado: false
     };
   },
 
@@ -594,6 +594,11 @@ export default {
               <th>#</th>
               <th>Jugador</th>
               <th>Equipo</th>
+              <th @click="ordenarPor('partidos_jugados')" style="cursor: pointer;">
+                Jugados
+                <i
+                  :class="ordenRanking === 'partidos_jugados' ? (ordenDesc ? 'bi bi-caret-down-fill' : 'bi bi-caret-up-fill') : ''"></i>
+              </th>
               <th @click="ordenarPor('goles')" style="cursor: pointer;">
                 Goles
                 <i
@@ -632,6 +637,7 @@ export default {
               </td>
 
               <td>{{ jugador.equipo }}</td>
+              <td>{{ jugador.partidos_jugados }}</td>
               <td>{{ jugador.goles }}</td>
               <td>{{ jugador.asistencias }}</td>
               <td>{{ jugador.amarillas }}</td>
